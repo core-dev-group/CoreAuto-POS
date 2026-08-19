@@ -1,101 +1,88 @@
-# CoreAuto POS
+# CoreAuto POS & Workshop Management System
 
-> Powered by **[Core Dev Group](https://core-dev-group.my.id)**
+> **Developed & Maintained by [Core Dev Group](https://core-dev-group.my.id)**
 
-Sistem Point of Sale (POS) & Manajemen Inventori Multi-Cabang Modern untuk Bengkel.
+[![Next.js](https://img.shields.io/badge/Next.js-16_App_Router-black?logo=next.js)](https://nextjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-blue?logo=postgresql)](https://supabase.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma)](https://prisma.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?logo=tailwindcss)](https://tailwindcss.com/)
 
-## Fitur
+**CoreAuto POS** adalah Sistem Manajemen Operasional Bengkel & Point of Sale (POS) Multi-Cabang Enterprise. Aplikasi ini dirancang khusus untuk memenuhi kebutuhan bisnis perbengkelan modern dalam mengelola transaksi kasir, inventaris barang, mutasi stok antar cabang, komisi mekanik, hingga laporan keuangan laba-rugi secara terintegrasi dan real-time.
 
-- **POS (Point of Sale)** — Transaksi barang & jasa, draft/antrian, cetak invoice
-- **Manajemen Stok** — Mutasi masuk/keluar/rusak/retur per cabang
-- **Multi-Cabang** — Kelola stok & transaksi tiap cabang terpisah
-- **Mekanik & Komisi** — Tracking komisi mekanik per servis
-- **Cashflow** — Pencatatan arus kas masuk/keluar
-- **Laporan P&L** — Omzet, HPP, laba rugi per periode
-- **Export CSV** — Export data transaksi, stok, cashflow
-- **Role-based Access** — Super Admin, Kepala Cabang, Admin Gudang, Kasir
-- **PWA** — Installable di mobile/desktop
+---
 
-## Tech Stack
+## 🔑 Akun Demo (Demo Credentials)
 
-- **Framework:** Next.js 16 (App Router)
-- **Database:** SQLite + Prisma ORM
-- **Auth:** NextAuth.js (Credentials)
-- **Styling:** Tailwind CSS v4
-- **Icons:** Lucide React
-- **Validation:** Zod
+Anda dapat menggunakan akun demo di bawah ini untuk mencoba berbagai peran pengguna dalam sistem:
 
-## Setup
+| Peran (Role) | Email | Password | Akses & Wewenang |
+| :--- | :--- | :--- | :--- |
+| **Kepala Cabang (Pusat)** | `kepala@bengkelin.local` | `admin123` | Laporan Keuangan Pusat, Kelola Jasa & Mekanik, Approval Permintaan Stok |
+| **Kepala Cabang (Sudirman)** | `kepala2@bengkelin.local` | `admin123` | Laporan Keuangan Cabang, Permintaan Barang Cabang, Shift & Transaksi |
+| **Admin Gudang (Pusat)** | `gudang@bengkelin.local` | `admin123` | Kelola Barang, Stok Gudang Pusat, Pengiriman & Mutasi Barang |
+| **Kasir (POS)** | `kasir@bengkelin.local` | `admin123` | Terminal Kasir (POS), Buka/Tutup Shift, Pengajuan Permintaan Barang |
 
-### 1. Clone & Install
+> *Catatan: Akun Super Admin sengaja dinonaktifkan di halaman demo publik ini demi keamanan sistem dasar.*
 
+---
+
+## ✨ Fitur Unggulan
+
+- 🛒 **Point of Sale (POS) Responsive:** Fitur kasir cepat dengan antrian transaksi, pencetakan struk/invoice, dan integrasi metode pembayaran tunai/non-tunai.
+- 🏢 **Arsitektur Multi-Cabang:** Isolasi data stok dan laporan antar cabang dengan kontrol terpusat dari Gudang Pusat.
+- 📦 **Alur Permintaan Barang 2-Tahap:** Mekanisme pengajuan stok dari Kasir ➔ Persetujuan Kepala Cabang ➔ Pemenuhan oleh Admin Gudang Pusat.
+- 🔄 **Manajemen Mutasi Stok:** Pencatatan pergerakan barang (Masuk, Keluar, Retur, dan Afkir/Rusak) lengkap dengan log audit.
+- 👨‍🔧 **Perhitungan Komisi Mekanik:** Perhitungan otomatis komisi berdasarkan porsi pekerjaan dan jasa servis per transaksi.
+- 💰 **Keuangan & Cashflow:** Pencatatan arus kas operasional (Pemasukan & Pengeluaran) serta Laporan Laba/Rugi (P&L) terstruktur.
+- 👥 **Pilihan Akun Cepat (Account Switcher):** Kemudahan berganti antar akun Kasir/Admin pada perangkat lokal (*Local Storage*).
+- 📲 **Progressive Web App (PWA):** Dapat diinstal langsung di perangkat desktop maupun tablet/smartphone.
+
+---
+
+## 🛠️ Teknologi & Stack
+
+- **Frontend & Framework:** Next.js 16 (App Router, Server Actions)
+- **Styling & UI:** Tailwind CSS v4, Lucide Icons, Glassmorphism UI
+- **Database & ORM:** PostgreSQL (Supabase Cloud), Prisma ORM
+- **Autentikasi:** NextAuth.js (Credentials Provider, RBAC Middleware)
+- **Utilitas:** Date-fns, React Hot Toast, Zod Validation
+
+---
+
+## 🚀 Panduan Jalankan Lokal (Local Setup)
+
+### 1. Clone Repositori
 ```bash
-git clone <repo-url>
-cd bengkelin
+git clone https://github.com/core-dev-group/CoreAuto-POS.git
+cd CoreAuto-POS
 npm install
 ```
 
-### 2. Environment
-
-Buat file `.env`:
-
+### 2. Konfigurasi Environment (`.env`)
+Buat file `.env` di direktori utama:
 ```env
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://postgres.[REF]:[PASSWORD]@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="<random-string>"
+NEXTAUTH_SECRET="kunci-rahasia-coreauto-pos"
 ```
 
-Generate secret:
+### 3. Migrasi & Seed Database
 ```bash
-openssl rand -base64 32
-```
-
-### 3. Database
-
-```bash
-npx prisma migrate dev
+npx prisma generate
+npx prisma db push
 npx tsx prisma/seed.ts
 ```
 
-### 4. Run
-
+### 4. Jalankan Development Server
 ```bash
 npm run dev
 ```
+Buka browser Anda di `http://localhost:3000`.
 
-Buka [http://localhost:3000](http://localhost:3000).
+---
 
-## Default Login (Seed)
+## 📄 Lisensi & Hak Cipta
 
-| Email | Password | Role |
-|-------|----------|------|
-| `admin@bengkelin.com` | `password123` | Super Admin |
+Dikembangkan oleh **[Core Dev Group](https://core-dev-group.my.id)**. Seluruh hak cipta dilindungi undang-undang.
 
-> Cek `prisma/seed.ts` untuk akun lainnya.
-
-## Struktur Project
-
-```
-src/
-├── app/
-│   ├── (dashboard)/     # Admin UI (barang, cabang, mekanik, dll)
-│   ├── pos/             # Kasir POS
-│   ├── api/             # Auth & Export routes
-│   ├── login/           # Login page
-│   └── print/           # Invoice print
-├── components/          # Shared components
-├── lib/
-│   ├── auth.ts          # NextAuth config
-│   ├── prisma.ts        # Prisma client
-│   └── validations/     # Zod schemas
-└── middleware.ts        # Auth & route protection
-```
-
-## Scripts
-
-| Command | Keterangan |
-|---------|------------|
-| `npm run dev` | Development server |
-| `npm run build` | Production build |
-| `npm run start` | Start production |
-| `npm run lint` | ESLint check |
+Kunjungi website resmi kami di [https://core-dev-group.my.id](https://core-dev-group.my.id) untuk informasi lebih lanjut mengenai layanan pengembangan perangkat lunak, sistem POS, dan solusi digital enterprise.
