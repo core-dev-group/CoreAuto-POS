@@ -111,13 +111,21 @@ export default function LoginPage() {
       <div className="w-full max-w-md mx-4 relative z-10">
         
         {/* Brand Logo Header */}
-        <div className="flex justify-center mb-6 sm:mb-8">
-          <div className="flex items-center gap-3">
-            <img src="/logo.jpg" alt="CoreAuto POS Logo" className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shadow-lg shadow-blue-500/30 ring-1 ring-white/20" />
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tight drop-shadow-sm">
-              CoreAuto POS
-            </h1>
+        <div className="flex flex-col items-center justify-center mb-6 sm:mb-8 text-center">
+          <div className="relative group mb-3">
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse" />
+            <img 
+              src="/logo.jpg" 
+              alt="CoreAuto POS Logo" 
+              className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-2xl border-2 border-white/20" 
+            />
           </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-blue-400 tracking-tight drop-shadow-md">
+            CoreAuto POS
+          </h1>
+          <p className="text-xs sm:text-sm text-cyan-400/90 font-semibold tracking-widest uppercase mt-1">
+            Workshop Management System
+          </p>
         </div>
 
         <div className="bg-white/5 backdrop-blur-2xl p-6 sm:p-10 rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl border border-white/10 relative overflow-hidden ring-1 ring-white/5">

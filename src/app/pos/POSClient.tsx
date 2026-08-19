@@ -354,7 +354,9 @@ export default function POSClient({ branches, activeBranchId, mechanics, service
     <div className="bg-gray-100 flex h-screen overflow-hidden text-gray-800 font-sans w-full">
       {/* SIDEBAR KIRI (Desktop) */}
       <aside className="hidden md:flex w-20 bg-white flex-col items-center py-6 shadow-md z-20 shrink-0">
-        <img src="/logo.jpg" alt="Logo" className="w-11 h-11 rounded-xl mb-8 object-cover shrink-0 shadow-sm border border-gray-200" />
+        <div className="p-0.5 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-md mb-8 shrink-0">
+          <img src="/logo.jpg" alt="Logo" className="w-12 h-12 rounded-[14px] object-cover" />
+        </div>
         <nav className="flex flex-col gap-6 w-full px-4 h-full">
           <button 
             onClick={() => setActiveMainTab("POS")}

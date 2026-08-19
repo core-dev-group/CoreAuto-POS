@@ -11,8 +11,10 @@ export default function MobileHeader({ session }: { session: any }) {
     <>
       <div className="md:hidden bg-gray-900 text-white h-14 flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-2.5 font-bold text-lg">
-          <img src="/logo.jpg" alt="Logo" className="w-7 h-7 rounded-lg object-cover ring-1 ring-blue-500/30" />
-          <span>CoreAuto POS</span>
+          <div className="p-0.5 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-sm shrink-0">
+            <img src="/logo.jpg" alt="Logo" className="w-7 h-7 rounded-[6px] object-cover" />
+          </div>
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-100 to-blue-200">CoreAuto POS</span>
         </div>
         <button onClick={() => setIsOpen(true)} className="p-2 -mr-2">
           <Menu size={24} />
