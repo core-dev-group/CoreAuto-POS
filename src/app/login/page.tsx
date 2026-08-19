@@ -100,7 +100,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0f] relative overflow-hidden font-sans">
+    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0f] relative overflow-y-auto font-sans py-12 px-4">
       
       {/* Dynamic Background Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none mix-blend-screen animate-pulse" />
@@ -108,16 +108,16 @@ export default function LoginPage() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-cyan-900/10 blur-[100px] pointer-events-none" />
 
       {/* Main Glass Card */}
-      <div className="w-full max-w-md mx-4 relative z-10">
+      <div className="w-full max-w-md my-auto relative z-10">
         
         {/* Brand Logo Header */}
         <div className="flex flex-col items-center justify-center mb-6 sm:mb-8 text-center">
           <div className="relative group mb-3">
             <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse" />
             <img 
-              src="/logo.jpg" 
+              src="/logo.png" 
               alt="CoreAuto POS Logo" 
-              className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-2xl border-2 border-white/20" 
+              className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-2xl border-2 border-white/20 bg-gray-900" 
             />
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-blue-400 tracking-tight drop-shadow-md">

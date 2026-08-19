@@ -32,7 +32,7 @@ export default function Sidebar({ session, onClick }: { session?: any, onClick?:
     <div className="w-60 bg-gray-900 text-white flex flex-col h-full shrink-0">
       <div className="p-4 text-xl font-bold border-b border-gray-800 flex items-center gap-3">
         <div className="p-0.5 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-sm shrink-0">
-          <img src="/logo.jpg" alt="Logo" className="w-8 h-8 rounded-[6px] object-cover" />
+          <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-[6px] object-cover" />
         </div>
         <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-100 to-blue-200">CoreAuto POS</span>
       </div>
