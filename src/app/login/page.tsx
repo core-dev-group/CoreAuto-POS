@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Store, ShoppingCart, Plus, X, ArrowLeft, KeyRound, Eye, EyeOff, Wrench } from "lucide-react";
 
 interface SavedAccount {
