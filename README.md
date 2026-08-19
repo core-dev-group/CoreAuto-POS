@@ -1,7 +1,9 @@
 # CoreAuto POS & Workshop Management System
 
-> **Developed & Maintained by [Core Dev Group](https://core-dev-group.my.id)**
+> 🌐 **Live Demo Application:** [https://core-auto-pos.vercel.app](https://core-auto-pos.vercel.app)  
+> 🛠️ **Developed & Maintained by [Core Dev Group](https://core-dev-group.my.id)**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-core--auto--pos.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://core-auto-pos.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16_App_Router-black?logo=next.js)](https://nextjs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-blue?logo=postgresql)](https://supabase.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma)](https://prisma.io/)
@@ -13,7 +15,7 @@
 
 ## 🔑 Akun Demo (Demo Credentials)
 
-Anda dapat menggunakan akun demo di bawah ini untuk mencoba berbagai peran pengguna dalam sistem:
+Coba langsung aplikasinya di **[core-auto-pos.vercel.app](https://core-auto-pos.vercel.app)** dengan akun demo di bawah ini:
 
 | Peran (Role) | Email | Password | Akses & Wewenang |
 | :--- | :--- | :--- | :--- |
@@ -45,39 +47,7 @@ Anda dapat menggunakan akun demo di bawah ini untuk mencoba berbagai peran pengg
 - **Styling & UI:** Tailwind CSS v4, Lucide Icons, Glassmorphism UI
 - **Database & ORM:** PostgreSQL (Supabase Cloud), Prisma ORM
 - **Autentikasi:** NextAuth.js (Credentials Provider, RBAC Middleware)
-- **Utilitas:** Date-fns, React Hot Toast, Zod Validation
-
----
-
-## 🚀 Panduan Jalankan Lokal (Local Setup)
-
-### 1. Clone Repositori
-```bash
-git clone https://github.com/core-dev-group/CoreAuto-POS.git
-cd CoreAuto-POS
-npm install
-```
-
-### 2. Konfigurasi Environment (`.env`)
-Buat file `.env` di direktori utama:
-```env
-DATABASE_URL="postgresql://postgres.[REF]:[PASSWORD]@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="kunci-rahasia-coreauto-pos"
-```
-
-### 3. Migrasi & Seed Database
-```bash
-npx prisma generate
-npx prisma db push
-npx tsx prisma/seed.ts
-```
-
-### 4. Jalankan Development Server
-```bash
-npm run dev
-```
-Buka browser Anda di `http://localhost:3000`.
+- **Deployment:** Vercel App Hosting
 
 ---
 
