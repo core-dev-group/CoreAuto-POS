@@ -133,6 +133,7 @@ export default function POSClient({ branches, activeBranchId, mechanics, service
   const [search, setSearch] = useState("");
   const [activeMainTab, setActiveMainTab] = useState<"POS" | "ANTREAN">("POS");
   const [activeTab, setActiveTab] = useState<"BARANG" | "JASA">("BARANG");
+  const [isTabChanging, setIsTabChanging] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
@@ -140,6 +141,20 @@ export default function POSClient({ branches, activeBranchId, mechanics, service
   
   const [activeTransactionId, setActiveTransactionId] = useState<string | null>(null);
   const [initialCustomerInfo, setInitialCustomerInfo] = useState<any>(null);
+
+  const changeMainTab = (tab: "POS" | "ANTREAN") => {
+    if (tab === activeMainTab) return;
+    setIsTabChanging(true);
+    setActiveMainTab(tab);
+    setTimeout(() => setIsTabChanging(false), 150);
+  };
+
+  const changeSubTab = (tab: "BARANG" | "JASA") => {
+    if (tab === activeTab) return;
+    setIsTabChanging(true);
+    setActiveTab(tab);
+    setTimeout(() => setIsTabChanging(false), 150);
+  };
   const { confirm } = useConfirm();
 
   const handleLogout = () => {
@@ -359,14 +374,14 @@ export default function POSClient({ branches, activeBranchId, mechanics, service
         </div>
         <nav className="flex flex-col gap-6 w-full px-4 h-full">
           <button 
-            onClick={() => setActiveMainTab("POS")}
+            onClick={() => changeMainTab("POS")}
             className={`p-3 rounded-xl flex justify-center transition ${activeMainTab === "POS" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-100"}`}
             title="Kasir POS"
           >
             <Monitor className="w-6 h-6" />
           </button>
           <button 
-            onClick={() => setActiveMainTab("ANTREAN")}
+            onClick={() => changeMainTab("ANTREAN")}
             className={`p-3 rounded-xl flex justify-center transition ${activeMainTab === "ANTREAN" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-100"}`}
             title="Antrean Servis"
           >
@@ -473,13 +488,13 @@ export default function POSClient({ branches, activeBranchId, mechanics, service
             {/* Kategori / Quick Menu */}
             <div className="flex gap-4 mb-6">
               <button 
-                onClick={() => setActiveTab("BARANG")}
+                onClick={() => changeSubTab("BARANG")}
                 className={`px-5 py-2 rounded-full font-medium text-sm transition ${activeTab === "BARANG" ? "bg-gray-800 text-white" : "bg-white text-gray-600 border hover:bg-gray-50"}`}
               >
                 Barang & Sparepart
               </button>
               <button 
-                onClick={() => setActiveTab("JASA")}
+                onClick={() => changeSubTab("JASA")}
                 className={`px-5 py-2 rounded-full font-medium text-sm transition ${activeTab === "JASA" ? "bg-gray-800 text-white" : "bg-white text-gray-600 border hover:bg-gray-50"}`}
               >
                 Jasa Servis

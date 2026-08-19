@@ -6,9 +6,23 @@ import { LogOut, Home, Package, Store, Users, FileText, Wrench, ShoppingCart, Ar
 import { signOut } from "next-auth/react";
 import { useConfirm } from "./ConfirmModalProvider";
 
+import { useState, useEffect } from "react";
+
 export default function Sidebar({ session, onClick }: { session?: any, onClick?: () => void }) {
   const { confirm } = useConfirm();
   const pathname = usePathname();
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
+
+  useEffect(() => {
+    setPendingPath(null);
+  }, [pathname]);
+
+  const handleNavClick = (href: string) => {
+    if (pathname !== href) {
+      setPendingPath(href);
+    }
+    if (onClick) onClick();
+  };
 
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
