@@ -354,9 +354,7 @@ export default function POSClient({ branches, activeBranchId, mechanics, service
     <div className="bg-gray-100 flex h-screen overflow-hidden text-gray-800 font-sans w-full">
       {/* SIDEBAR KIRI (Desktop) */}
       <aside className="hidden md:flex w-20 bg-white flex-col items-center py-6 shadow-md z-20 shrink-0">
-        <div className="bg-blue-600 text-white w-12 h-12 rounded-xl mb-8 font-bold text-xl flex items-center justify-center shrink-0">
-          B.
-        </div>
+        <img src="/logo.jpg" alt="Logo" className="w-11 h-11 rounded-xl mb-8 object-cover shrink-0 shadow-sm border border-gray-200" />
         <nav className="flex flex-col gap-6 w-full px-4 h-full">
           <button 
             onClick={() => setActiveMainTab("POS")}
@@ -659,7 +657,7 @@ export default function POSClient({ branches, activeBranchId, mechanics, service
           <div className="relative w-64 bg-white h-full flex flex-col shadow-xl animate-in slide-in-from-left">
             <div className="p-6 flex items-center justify-between border-b border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="bg-blue-600 text-white w-10 h-10 rounded-xl font-bold flex items-center justify-center">B.</div>
+                <img src="/logo.jpg" alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-sm border border-gray-200" />
                 <span className="font-bold text-gray-800">Menu Kasir</span>
               </div>
               <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-400 hover:text-gray-600"><X className="w-6 h-6" /></button>

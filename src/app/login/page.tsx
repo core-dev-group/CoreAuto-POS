@@ -112,10 +112,8 @@ export default function LoginPage() {
         
         {/* Brand Logo Header */}
         <div className="flex justify-center mb-6 sm:mb-8">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30 ring-1 ring-white/20">
-              <Wrench className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-            </div>
+          <div className="flex items-center gap-3">
+            <img src="/logo.jpg" alt="CoreAuto POS Logo" className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shadow-lg shadow-blue-500/30 ring-1 ring-white/20" />
             <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tight drop-shadow-sm">
               CoreAuto POS
             </h1>

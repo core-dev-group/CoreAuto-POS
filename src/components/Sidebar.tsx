@@ -30,8 +30,9 @@ export default function Sidebar({ session, onClick }: { session?: any, onClick?:
 
   return (
     <div className="w-60 bg-gray-900 text-white flex flex-col h-full shrink-0">
-      <div className="p-4 text-xl font-bold border-b border-gray-800 flex items-center justify-between">
-        CoreAuto POS
+      <div className="p-4 text-xl font-bold border-b border-gray-800 flex items-center gap-3">
+        <img src="/logo.jpg" alt="Logo" className="w-8 h-8 rounded-lg object-cover ring-1 ring-blue-500/30" />
+        <span>CoreAuto POS</span>
       </div>
       <div className="p-4 text-sm text-gray-400 border-b border-gray-800 bg-gray-900/50">
         <p className="font-semibold text-gray-300 truncate">{session?.user?.name}</p>

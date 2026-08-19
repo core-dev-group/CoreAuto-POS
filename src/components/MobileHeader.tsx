@@ -10,7 +10,10 @@ export default function MobileHeader({ session }: { session: any }) {
   return (
     <>
       <div className="md:hidden bg-gray-900 text-white h-14 flex items-center justify-between px-4 shrink-0">
-        <div className="font-bold text-lg">CoreAuto POS</div>
+        <div className="flex items-center gap-2.5 font-bold text-lg">
+          <img src="/logo.jpg" alt="Logo" className="w-7 h-7 rounded-lg object-cover ring-1 ring-blue-500/30" />
+          <span>CoreAuto POS</span>
+        </div>
         <button onClick={() => setIsOpen(true)} className="p-2 -mr-2">
           <Menu size={24} />
         </button>
