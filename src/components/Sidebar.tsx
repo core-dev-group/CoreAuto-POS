@@ -135,8 +135,15 @@ export default function Sidebar({ session, onClick }: { session?: any, onClick?:
         <button onClick={handleLogout} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-red-900/50 text-red-400 transition-colors text-sm font-medium">
           <LogOut size={18} /> Keluar
         </button>
-        <div className="text-[10px] text-center text-gray-500 font-medium tracking-wider uppercase pt-1">
-          Powered by <a href="https://core-dev-group.my.id" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white font-semibold underline decoration-dotted transition-colors">Core Dev Group</a>
+        <div className="text-[10px] text-center text-gray-500 font-medium tracking-wider uppercase pt-1 space-y-1">
+          <div>
+            Powered by <a href="https://core-dev-group.my.id" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white font-semibold underline decoration-dotted transition-colors">Core Dev Group</a>
+          </div>
+          <div className="flex items-center justify-center gap-2 text-[10px] text-gray-400 normal-case tracking-normal">
+            <Link href="/terms" className="hover:text-cyan-400 transition-colors">TOS</Link>
+            <span>•</span>
+            <Link href="/privacy" className="hover:text-cyan-400 transition-colors">Privasi</Link>
+          </div>
         </div>
       </div>
     </div>

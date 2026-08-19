@@ -100,12 +100,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0f] relative overflow-y-auto font-sans py-12 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0f] relative overflow-hidden font-sans py-10 px-4">
       
-      {/* Dynamic Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none mix-blend-screen animate-pulse" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-600/20 blur-[150px] pointer-events-none mix-blend-screen" style={{ animation: "pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite" }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-cyan-900/10 blur-[100px] pointer-events-none" />
+      {/* Dynamic Background Elements (Safely Clipped) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-600/20 blur-[120px] mix-blend-screen animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-600/20 blur-[150px] mix-blend-screen" style={{ animation: "pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite" }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-cyan-900/10 blur-[100px]" />
+      </div>
 
       {/* Main Glass Card */}
       <div className="w-full max-w-md my-auto relative z-10">
@@ -114,11 +116,17 @@ export default function LoginPage() {
         <div className="flex flex-col items-center justify-center mb-6 sm:mb-8 text-center">
           <div className="relative group mb-3">
             <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse" />
-            <img 
-              src="/logo.png" 
-              alt="CoreAuto POS Logo" 
-              className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-2xl border-2 border-white/20 bg-gray-900" 
-            />
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 p-0.5 shadow-2xl border-2 border-white/20 flex items-center justify-center overflow-hidden">
+              <Wrench className="w-8 h-8 text-white absolute shrink-0" />
+              <img 
+                src="/logo.png" 
+                alt="CoreAuto POS Logo" 
+                className="relative z-10 w-full h-full rounded-[14px] object-cover bg-gray-900" 
+                onError={(e) => {
+                  (e.target as HTMLElement).style.opacity = '0';
+                }}
+              />
+            </div>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-blue-400 tracking-tight drop-shadow-md">
             CoreAuto POS
@@ -348,8 +356,15 @@ export default function LoginPage() {
           )}
 
         </div>
-        <div className="mt-6 text-center text-xs text-gray-500 font-medium tracking-wide">
-          Powered by <a href="https://core-dev-group.my.id" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white font-bold underline decoration-dotted transition-colors">Core Dev Group</a>
+        <div className="mt-6 text-center text-xs text-gray-500 font-medium tracking-wide space-y-2">
+          <div>
+            Powered by <a href="https://core-dev-group.my.id" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white font-bold underline decoration-dotted transition-colors">Core Dev Group</a>
+          </div>
+          <div className="flex items-center justify-center gap-3 text-[11px] text-gray-400">
+            <Link href="/terms" className="hover:text-cyan-400 transition-colors underline decoration-dotted">Syarat & Ketentuan</Link>
+            <span>•</span>
+            <Link href="/privacy" className="hover:text-cyan-400 transition-colors underline decoration-dotted">Kebijakan Privasi</Link>
+          </div>
         </div>
       </div>
     </div>
