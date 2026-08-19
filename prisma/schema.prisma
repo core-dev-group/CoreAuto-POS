@@ -1,0 +1,227 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password_hash String
+  role          String
+  branch_id     String?
+  created_at    DateTime       @default(now())
+  auditLogs     AuditLog[]
+  shifts        CashierShift[]
+  branch        Branch?        @relation(fields: [branch_id], references: [id])
+}
+
+model Branch {
+  id           String          @id @default(uuid())
+  name         String
+  address      String
+  phone        String
+  is_central   Boolean         @default(false)
+  created_at   DateTime        @default(now())
+  auditLogs    AuditLog[]
+  branchStocks BranchStock[]
+  cashflows    CashflowEntry[]
+  shifts       CashierShift[]
+  mechanics    Mechanic[]
+  transactions Transaction[]
+  users        User[]
+}
+
+model Product {
+  id                          String            @id @default(uuid())
+  sku                         String            @unique
+  barcode                     String?           @unique
+  name                        String
+  category                    String?
+  purchase_price              Float
+  sell_price                  Float
+  min_stock_threshold_default Int               @default(5)
+  created_at                  DateTime          @default(now())
+  branchStocks                BranchStock[]
+  stockMutations              StockMutation[]
+  stockTransfers              StockTransfer[]
+  transactionItems            TransactionItem[]
+}
+
+model BranchStock {
+  id                  String   @id @default(uuid())
+  product_id          String
+  branch_id           String
+  quantity            Int      @default(0)
+  min_stock_threshold Int?
+  updated_at          DateTime @updatedAt
+  branch              Branch   @relation(fields: [branch_id], references: [id])
+  product             Product  @relation(fields: [product_id], references: [id])
+
+  @@unique([product_id, branch_id])
+}
+
+model StockMutation {
+  id           String   @id @default(uuid())
+  product_id   String
+  branch_id    String
+  type         String
+  quantity     Int
+  reference_id String?
+  note         String?
+  created_by   String
+  created_at   DateTime @default(now())
+  product      Product  @relation(fields: [product_id], references: [id])
+}
+
+model StockTransfer {
+  id               String   @id @default(uuid())
+  product_id       String
+  quantity         Int
+  from_branch_id   String
+  to_branch_id     String
+  status           String   @default("PENDING")
+  rejection_reason String?
+  requested_by     String
+  approved_by      String?
+  received_by      String?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  product          Product  @relation(fields: [product_id], references: [id])
+}
+
+model Mechanic {
+  id                String             @id @default(uuid())
+  name              String
+  branch_id         String
+  commission_rate   Float
+  phone             String?
+  active            Boolean            @default(true)
+  created_at        DateTime           @default(now())
+  commissionPayouts CommissionPayout[]
+  branch            Branch             @relation(fields: [branch_id], references: [id])
+  transactionItems  TransactionItem[]
+}
+
+model ServiceItem {
+  id                       String            @id @default(uuid())
+  name                     String
+  default_price            Float
+  commission_rate_override Float?
+  created_at               DateTime          @default(now())
+  transactionItems         TransactionItem[]
+}
+
+model Transaction {
+  id                  String            @id @default(uuid())
+  invoice_number      String            @unique
+  branch_id           String
+  cashier_id          String
+  customer_id         String?
+  vehicle_plate       String?
+  subtotal            Float
+  total               Float
+  payment_method      String
+  status              String            @default("SELESAI")
+  shift_id            String?
+  cancelled_by        String?
+  cancellation_reason String?
+  cancelled_at        DateTime?
+  created_at          DateTime          @default(now())
+  shift               CashierShift?     @relation(fields: [shift_id], references: [id])
+  customer            Customer?         @relation(fields: [customer_id], references: [id])
+  branch              Branch            @relation(fields: [branch_id], references: [id])
+  items               TransactionItem[]
+}
+
+model TransactionItem {
+  id                 String       @id @default(uuid())
+  transaction_id     String
+  product_id         String?
+  service_item_id    String?
+  mechanic_id        String?
+  quantity           Int
+  unit_price         Float
+  subtotal           Float
+  is_commission_paid Boolean      @default(false)
+  mechanic           Mechanic?    @relation(fields: [mechanic_id], references: [id])
+  service_item       ServiceItem? @relation(fields: [service_item_id], references: [id])
+  product            Product?     @relation(fields: [product_id], references: [id])
+  transaction        Transaction  @relation(fields: [transaction_id], references: [id])
+}
+
+model CashflowEntry {
+  id          String   @id @default(uuid())
+  branch_id   String
+  type        String
+  category    String
+  amount      Float
+  description String?
+  created_by  String
+  created_at  DateTime @default(now())
+  branch      Branch   @relation(fields: [branch_id], references: [id])
+}
+
+model CommissionPayout {
+  id           String    @id @default(uuid())
+  mechanic_id  String
+  period_start DateTime
+  period_end   DateTime
+  total_amount Float
+  paid         Boolean   @default(false)
+  paid_at      DateTime?
+  created_at   DateTime  @default(now())
+  mechanic     Mechanic  @relation(fields: [mechanic_id], references: [id])
+}
+
+model Customer {
+  id           String        @id @default(uuid())
+  name         String
+  phone        String?
+  created_at   DateTime      @default(now())
+  transactions Transaction[]
+  vehicles     Vehicle[]
+}
+
+model Vehicle {
+  plate_number String   @id
+  customer_id  String
+  brand        String?
+  model        String?
+  created_at   DateTime @default(now())
+  customer     Customer @relation(fields: [customer_id], references: [id])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  user_id    String
+  branch_id  String?
+  action     String
+  entity     String
+  entity_id  String?
+  details    String?
+  created_at DateTime @default(now())
+  branch     Branch?  @relation(fields: [branch_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id])
+}
+
+model CashierShift {
+  id                   String        @id @default(uuid())
+  user_id              String
+  branch_id            String
+  start_time           DateTime      @default(now())
+  end_time             DateTime?
+  starting_cash        Float         @default(0)
+  actual_ending_cash   Float?
+  expected_ending_cash Float?
+  difference           Float?
+  status               String        @default("OPEN")
+  notes                String?
+  branch               Branch        @relation(fields: [branch_id], references: [id])
+  user                 User          @relation(fields: [user_id], references: [id])
+  transactions         Transaction[]
+}
