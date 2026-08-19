@@ -37,9 +37,9 @@ export async function voidTransaction(formData: FormData) {
         // Find branch stock
         const branchStock = await tx.branchStock.findUnique({
           where: {
-            branch_id_product_id: {
-              branch_id: transaction.branch_id,
+            product_id_branch_id: {
               product_id: item.product_id,
+              branch_id: transaction.branch_id,
             }
           }
         });
@@ -48,7 +48,7 @@ export async function voidTransaction(formData: FormData) {
           await tx.branchStock.update({
             where: { id: branchStock.id },
             data: {
-              stock: {
+              quantity: {
                 increment: item.quantity
               }
             }

@@ -11,7 +11,7 @@ import { CartItem, getTransactionById, deleteTransaction } from "./actions";
 import { toast } from "react-hot-toast";
 import { useConfirm } from "@/components/ConfirmModalProvider";
 
-type ProductType = { id: string; name: string; sku: string; sell_price: number; stock_quantity: number };
+type ProductType = { id: string; name: string; sku: string; barcode?: string | null; sell_price: number; stock_quantity: number };
 type ServiceType = { id: string; name: string; default_price: number };
 
 interface POSClientProps {
@@ -147,7 +147,7 @@ export default function POSClient({ branches, activeBranchId, mechanics, service
       title: "Konfirmasi Keluar",
       message: "Apakah Anda yakin ingin keluar dari halaman Kasir?",
       onConfirm: () => signOut({ callbackUrl: "/login" }),
-      type: "danger"
+      danger: true
     });
   };
 
