@@ -357,14 +357,18 @@ export default function LoginPage() {
           )}
 
         </div>
-        <div className="mt-6 text-center text-xs text-gray-500 font-medium tracking-wide space-y-2">
+        <div className="mt-6 text-center text-xs text-gray-500 font-medium tracking-wide space-y-2 relative z-20">
           <div>
             Powered by <a href="https://core-dev-group.my.id" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white font-bold underline decoration-dotted transition-colors">Core Dev Group</a>
           </div>
-          <div className="flex items-center justify-center gap-3 text-[11px] text-gray-400">
-            <Link href="/terms" className="hover:text-cyan-400 transition-colors underline decoration-dotted">Syarat & Ketentuan</Link>
-            <span>•</span>
-            <Link href="/privacy" className="hover:text-cyan-400 transition-colors underline decoration-dotted">Kebijakan Privasi</Link>
+          <div className="flex items-center justify-center gap-3 text-xs text-gray-400 pt-1">
+            <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-cyan-300/90 hover:text-cyan-200 font-semibold transition-colors underline decoration-dotted cursor-pointer">
+              Syarat & Ketentuan
+            </a>
+            <span className="text-gray-600">•</span>
+            <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-300/90 hover:text-cyan-200 font-semibold transition-colors underline decoration-dotted cursor-pointer">
+              Kebijakan Privasi
+            </a>
           </div>
         </div>
       </div>
