@@ -155,21 +155,23 @@ export default async function LaporanPage({
               />
             </div>
           )}
-          <button 
-            type="submit" 
-            className="w-full md:w-auto px-4 md:px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium h-[42px] text-sm"
-          >
-            Terapkan
-          </button>
+          <div className="w-full md:w-auto flex items-end h-full">
+            <button 
+              type="submit" 
+              className="w-full px-4 md:px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium h-[42px] text-sm"
+            >
+              Terapkan
+            </button>
+          </div>
         </form>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <div className="flex justify-between items-start mb-2 md:mb-4">
-            <div>
+            <div className="min-w-0 pr-2">
               <p className="text-xs md:text-sm font-medium text-gray-500">Omzet Kotor (POS)</p>
-              <h3 className="text-lg md:text-2xl font-bold text-gray-900 mt-1">Rp {totalOmzet.toLocaleString("id-ID")}</h3>
+              <h3 className="text-lg md:text-2xl font-bold text-gray-900 mt-1 whitespace-nowrap">Rp {totalOmzet.toLocaleString("id-ID")}</h3>
             </div>
             <div className="p-2 md:p-3 bg-blue-50 text-blue-600 rounded-lg shrink-0">
               <DollarSign className="w-5 h-5 md:w-6 md:h-6" />
@@ -180,22 +182,22 @@ export default async function LaporanPage({
 
         <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <div className="flex justify-between items-start mb-2 md:mb-4">
-            <div>
+            <div className="min-w-0 pr-2">
               <p className="text-xs md:text-sm font-medium text-gray-500">HPP Barang Terjual</p>
-              <h3 className="text-lg md:text-2xl font-bold text-orange-600 mt-1">- Rp {totalHPP.toLocaleString("id-ID")}</h3>
+              <h3 className="text-lg md:text-2xl font-bold text-orange-600 mt-1 whitespace-nowrap">- Rp {totalHPP.toLocaleString("id-ID")}</h3>
             </div>
             <div className="p-2 md:p-3 bg-orange-50 text-orange-600 rounded-lg shrink-0">
               <Package className="w-5 h-5 md:w-6 md:h-6" />
             </div>
           </div>
-          <p className="text-[10px] md:text-sm text-gray-500">Modal beli *sparepart*</p>
+          <p className="text-[10px] md:text-sm text-gray-500">Modal beli <em>sparepart</em></p>
         </div>
 
         <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <div className="flex justify-between items-start mb-2 md:mb-4">
-            <div>
+            <div className="min-w-0 pr-2">
               <p className="text-xs md:text-sm font-medium text-gray-500">Total Pengeluaran</p>
-              <h3 className="text-lg md:text-2xl font-bold text-red-600 mt-1">- Rp {totalBeban.toLocaleString("id-ID")}</h3>
+              <h3 className="text-lg md:text-2xl font-bold text-red-600 mt-1 whitespace-nowrap">- Rp {totalBeban.toLocaleString("id-ID")}</h3>
             </div>
             <div className="p-2 md:p-3 bg-red-50 text-red-600 rounded-lg shrink-0">
               <TrendingDown className="w-5 h-5 md:w-6 md:h-6" />
@@ -206,11 +208,11 @@ export default async function LaporanPage({
 
         <div className={`p-4 md:p-6 rounded-xl border shadow-sm flex flex-col justify-between ${labaBersih >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
           <div className="flex justify-between items-start mb-2 md:mb-4">
-            <div>
+            <div className="min-w-0 pr-2">
               <p className={`text-xs md:text-sm font-bold ${labaBersih >= 0 ? 'text-green-800' : 'text-red-800'}`}>
                 {labaBersih >= 0 ? 'Laba Bersih' : 'Rugi Bersih'}
               </p>
-              <h3 className={`text-lg md:text-2xl font-black mt-1 ${labaBersih >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+              <h3 className={`text-lg md:text-2xl font-black mt-1 whitespace-nowrap ${labaBersih >= 0 ? 'text-green-700' : 'text-red-700'}`}>
                 Rp {Math.abs(labaBersih).toLocaleString("id-ID")}
               </h3>
             </div>
