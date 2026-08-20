@@ -238,6 +238,12 @@ export default function LoginPage() {
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
+                <div className="flex items-start gap-3 mt-2 mb-2">
+                  <input type="checkbox" required id="tos_saved" className="mt-0.5 w-4 h-4 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-black/20 cursor-pointer" />
+                  <label htmlFor="tos_saved" className="text-xs text-gray-400 leading-relaxed cursor-pointer">
+                    Saya menyetujui <a href="/terms" target="_blank" className="text-cyan-400 hover:underline">Syarat & Ketentuan</a> serta <a href="/privacy" target="_blank" className="text-cyan-400 hover:underline">Kebijakan Privasi</a> yang berlaku.
+                  </label>
+                </div>
                 
                 <button
                   type="submit"
@@ -329,6 +335,13 @@ export default function LoginPage() {
                   </div>
                 </div>
                 
+                <div className="flex items-start gap-3 mt-2 mb-2">
+                  <input type="checkbox" required id="tos_login" className="mt-0.5 w-4 h-4 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-black/20 cursor-pointer" />
+                  <label htmlFor="tos_login" className="text-xs text-gray-400 leading-relaxed cursor-pointer">
+                    Saya menyetujui <a href="/terms" target="_blank" className="text-cyan-400 hover:underline">Syarat & Ketentuan</a> serta <a href="/privacy" target="_blank" className="text-cyan-400 hover:underline">Kebijakan Privasi</a> yang berlaku.
+                  </label>
+                </div>
+
                 <button
                   type="submit"
                   disabled={loading}
@@ -360,15 +373,6 @@ export default function LoginPage() {
         <div className="mt-6 text-center text-xs text-gray-500 font-medium tracking-wide space-y-2 relative z-20">
           <div>
             Powered by <a href="https://core-dev-group.my.id" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white font-bold underline decoration-dotted transition-colors">Core Dev Group</a>
-          </div>
-          <div className="flex items-center justify-center gap-3 text-xs text-gray-400 pt-1">
-            <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-cyan-300/90 hover:text-cyan-200 font-semibold transition-colors underline decoration-dotted cursor-pointer">
-              Syarat & Ketentuan
-            </a>
-            <span className="text-gray-600">•</span>
-            <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-300/90 hover:text-cyan-200 font-semibold transition-colors underline decoration-dotted cursor-pointer">
-              Kebijakan Privasi
-            </a>
           </div>
         </div>
       </div>

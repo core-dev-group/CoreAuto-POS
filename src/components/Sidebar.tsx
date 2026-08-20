@@ -153,11 +153,6 @@ export default function Sidebar({ session, onClick }: { session?: any, onClick?:
           <div>
             Powered by <a href="https://core-dev-group.my.id" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white font-semibold underline decoration-dotted transition-colors">Core Dev Group</a>
           </div>
-          <div className="flex items-center justify-center gap-2 text-[10px] text-gray-400 normal-case tracking-normal">
-            <a href="/terms" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 text-cyan-300/80 transition-colors underline decoration-dotted">TOS</a>
-            <span>•</span>
-            <a href="/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 text-cyan-300/80 transition-colors underline decoration-dotted">Privasi</a>
-          </div>
         </div>
       </div>
     </div>
