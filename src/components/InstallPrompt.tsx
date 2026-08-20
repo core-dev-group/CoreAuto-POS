@@ -43,7 +43,7 @@ export function InstallPrompt() {
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 bg-gray-900 text-white p-4 rounded-xl shadow-2xl z-50 flex items-start gap-4">
       <div className="flex-1">
-        <h3 className="font-bold text-sm">Install Bengkelin</h3>
+        <h3 className="font-bold text-sm">Install CoreAuto POS</h3>
         <p className="text-xs text-gray-300 mt-1">Tambahkan ke layar utama untuk pengalaman seperti aplikasi native.</p>
         <button 
           onClick={handleInstallClick}
