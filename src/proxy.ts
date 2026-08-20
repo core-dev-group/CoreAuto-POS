@@ -16,7 +16,9 @@ export const config = {
      * - favicon.ico (favicon file)
      * - login (auth page)
      * - logo.png (public images)
+     * - terms (Syarat & Ketentuan)
+     * - privacy (Kebijakan Privasi)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|login|logo.png|sw.js|workbox-.*\\.js).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|login|logo.png|sw.js|workbox-.*\\.js|terms|privacy).*)",
   ],
 };
