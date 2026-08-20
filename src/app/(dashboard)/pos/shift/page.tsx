@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import { openShift, closeShift } from "./actions";
 import { Wallet, LogIn, LogOut, FileText, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { CloseShiftForm } from "./CloseShiftForm";
 
 export const metadata = {

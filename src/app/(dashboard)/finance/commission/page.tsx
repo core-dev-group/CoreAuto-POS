@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { Users, Banknote, ArrowRight } from "lucide-react";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { getServerSession } from "next-auth";

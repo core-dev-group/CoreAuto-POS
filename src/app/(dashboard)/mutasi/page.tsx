@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Plus, ArrowDownRight, ArrowUpRight, AlertTriangle, RefreshCcw } from "lucide-react";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { getServerSession } from "next-auth";

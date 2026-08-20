@@ -1,6 +1,6 @@
 import { getServices } from "./actions";
 import { Plus, Edit2, Wrench } from "lucide-react";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import DeleteButton from "./DeleteButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

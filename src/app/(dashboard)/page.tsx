@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { DollarSign, Wrench, AlertTriangle, Receipt } from "lucide-react";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { format, subDays } from "date-fns";
 import { id } from "date-fns/locale";
 

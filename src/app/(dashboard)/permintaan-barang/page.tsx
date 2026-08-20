@@ -1,6 +1,6 @@
 import { getRequests } from "./actions";
 import { Plus, PackageCheck, PackageX, Truck, ArrowRight, Package, Clock } from "lucide-react";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { getServerSession } from "next-auth";

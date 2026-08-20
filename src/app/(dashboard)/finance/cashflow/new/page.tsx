@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { ArrowLeft } from "lucide-react";
 import { createCashflow } from "../actions";
 import { redirect } from "next/navigation";

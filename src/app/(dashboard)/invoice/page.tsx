@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Receipt, Search, Printer, FileText, Download } from "lucide-react";

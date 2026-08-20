@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next-nprogress-bar";
 import { createMutation } from "./actions";
 import { Save, ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { toast } from "react-hot-toast";
 import { useConfirm } from "@/components/ConfirmModalProvider";
 import { CustomSelect } from "@/components/ui/CustomSelect";

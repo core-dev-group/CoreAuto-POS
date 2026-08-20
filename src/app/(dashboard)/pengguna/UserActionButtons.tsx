@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { useConfirm } from "@/components/ConfirmModalProvider";
 import { toast } from "react-hot-toast";
 import { deleteUser } from "./[id]/edit/actions";
@@ -32,7 +32,7 @@ export function UserActionButtons({ user, currentUserId }: { user: any, currentU
 
   return (
     <div className="flex items-center justify-end gap-3">
-      <Link 
+      <Link spinnerOnly 
         href={`/pengguna/${user.id}/edit`}
         className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
         title="Edit"

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
+import { LinkWithLoading as Link } from "@/components/LinkWithLoading";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2, History } from "lucide-react";
 import { format } from "date-fns";
