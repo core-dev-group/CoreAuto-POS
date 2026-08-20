@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { createBranch, updateBranch } from "./actions";
 import { Save, ArrowLeft } from "lucide-react";
 import Link from "next/link";

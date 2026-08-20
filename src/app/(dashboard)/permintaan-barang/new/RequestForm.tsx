@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { createRequest } from "../actions";
 import { Save } from "lucide-react";
 import Link from "next/link";
