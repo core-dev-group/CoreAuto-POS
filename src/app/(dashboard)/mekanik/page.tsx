@@ -2,12 +2,18 @@ import { getMechanics } from "./actions";
 import { Plus, Edit2, Store, Phone, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Manajemen Mekanik | CoreAuto POS",
 };
 
 export default async function MekanikPage() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role === "KASIR") redirect("/");
+
   const mechanics = await getMechanics();
 
   return (

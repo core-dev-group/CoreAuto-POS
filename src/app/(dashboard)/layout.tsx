@@ -2,6 +2,7 @@ import Sidebar from "@/components/Sidebar";
 import MobileHeader from "@/components/MobileHeader";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,
@@ -9,6 +10,9 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    redirect("/login");
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">

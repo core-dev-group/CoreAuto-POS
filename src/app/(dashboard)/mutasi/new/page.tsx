@@ -1,11 +1,17 @@
 import MutationForm from "../MutationForm";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Catat Mutasi Stok | CoreAuto POS",
 };
 
 export default async function NewMutationPage() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role === "KASIR") redirect("/");
+
   const branches = await prisma.branch.findMany({
     select: { id: true, name: true },
     orderBy: { name: "asc" },

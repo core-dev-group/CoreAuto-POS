@@ -108,6 +108,11 @@ export async function approveRequest(id: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
   const user_name = session.user.name as string;
+  const role = (session.user as any).role;
+
+  if (role !== "SUPER_ADMIN" && role !== "ADMIN_GUDANG_PUSAT") {
+    throw new Error("Unauthorized: Hanya Admin Gudang Pusat yang dapat menyetujui.");
+  }
 
   const request = await prisma.stockTransfer.findUnique({ where: { id } });
   if (!request || request.status !== "PENDING") {
@@ -166,6 +171,11 @@ export async function receiveRequest(id: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
   const user_name = session.user.name as string;
+  const role = (session.user as any).role;
+
+  if (role === "KASIR") {
+    throw new Error("Unauthorized: Kasir tidak dapat menerima barang.");
+  }
 
   const request = await prisma.stockTransfer.findUnique({ where: { id } });
   if (!request || request.status !== "DIKIRIM") {
@@ -229,6 +239,11 @@ export async function rejectRequest(id: string, reason: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
   const user_name = session.user.name as string;
+  const role = (session.user as any).role;
+
+  if (role !== "SUPER_ADMIN" && role !== "ADMIN_GUDANG_PUSAT") {
+    throw new Error("Unauthorized: Hanya Admin Gudang Pusat yang dapat menolak.");
+  }
 
   const request = await prisma.stockTransfer.findUnique({ where: { id } });
   if (!request || (request.status !== "PENDING" && request.status !== "MENUNGGU_CABANG")) {

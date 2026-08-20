@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { serviceSchema, parseFormData } from "@/lib/validations";
 
 export async function getServices(page = 1, limit = 10) {
@@ -23,6 +25,9 @@ export async function getServices(page = 1, limit = 10) {
 }
 
 export async function createService(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
   const data = parseFormData(serviceSchema, formData);
 
   await prisma.serviceItem.create({
@@ -37,6 +42,9 @@ export async function createService(formData: FormData) {
 }
 
 export async function updateService(id: string, formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
   const data = parseFormData(serviceSchema, formData);
 
   await prisma.serviceItem.update({
@@ -52,6 +60,9 @@ export async function updateService(id: string, formData: FormData) {
 }
 
 export async function deleteService(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
   await prisma.serviceItem.delete({ where: { id } });
   revalidatePath("/servis");
 }

@@ -17,7 +17,7 @@ export async function createAuditLog({
   details,
 }: {
   action: AuditAction;
-  entity: String;
+  entity: string;
   entity_id?: string;
   details?: Record<string, any>;
 }) {

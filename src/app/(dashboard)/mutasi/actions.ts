@@ -7,9 +7,15 @@ import { authOptions } from "@/lib/auth";
 import { mutationSchema, parseFormData } from "@/lib/validations";
 
 export async function createMutation(formData: FormData) {
-  const data = parseFormData(mutationSchema, formData);
   const session = await getServerSession(authOptions);
-  const created_by = session?.user?.name || "Sistem Admin";
+  if (!session?.user) throw new Error("Unauthorized");
+
+  // Kasir cannot create mutations
+  const role = (session.user as any).role;
+  if (role === "KASIR") throw new Error("Unauthorized");
+
+  const data = parseFormData(mutationSchema, formData);
+  const created_by = session.user.name || "Sistem Admin";
 
   let multiplier = 1;
   if (data.type === "KELUAR" || data.type === "RUSAK") {

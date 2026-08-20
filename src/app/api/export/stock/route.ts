@@ -9,6 +9,11 @@ export async function GET(req: Request) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
+  const role = (session.user as any).role;
+  if (role === "KASIR") {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
+
   const { searchParams } = new URL(req.url);
   const branchFilter = searchParams.get("branch");
 
@@ -31,15 +36,23 @@ export async function GET(req: Request) {
 
   // Build CSV
   const header = ["Cabang", "SKU", "Barcode", "Nama Barang", "Kategori", "Harga Jual", "Harga Beli", "Stok Saat Ini", "Minimum Stok"];
-  
+
   const rows = [header.join(",")];
 
+  const escapeCSV = (val: any) => {
+    if (val === null || val === undefined) return '""';
+    const str = String(val);
+    const escaped = str.replace(/"/g, '""');
+    if (/^[=+\-@]/.test(escaped)) return `"'${escaped}"`;
+    return `"${escaped}"`;
+  };
+
   stocks.forEach(st => {
-    const branchName = `"${st.branch.name}"`;
-    const sku = `"${st.product.sku}"`;
-    const barcode = `"${st.product.barcode || ""}"`;
-    const productName = `"${st.product.name}"`;
-    const category = `"${st.product.category || ""}"`;
+    const branchName = escapeCSV(st.branch.name);
+    const sku = escapeCSV(st.product.sku);
+    const barcode = escapeCSV(st.product.barcode || "");
+    const productName = escapeCSV(st.product.name);
+    const category = escapeCSV(st.product.category || "");
     
     rows.push([
       branchName,

@@ -30,7 +30,7 @@ export default function QueueTab({ branchId, onSelect }: QueueTabProps) {
         else setDetailTx(null);
       }
     } catch (error) {
-      console.error("Failed to load active transactions", error);
+      console.warn("Failed to load active transactions", error);
     } finally {
       setLoading(false);
     }

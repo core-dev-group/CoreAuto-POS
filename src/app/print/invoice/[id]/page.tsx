@@ -19,6 +19,7 @@ export default async function PrintInvoicePage({
     where: { id },
     include: {
       branch: true,
+      cashier: true,
       items: {
         include: {
           product: true,
@@ -58,7 +59,7 @@ export default async function PrintInvoicePage({
           </div>
           <div className="flex justify-between">
             <span>Kasir:</span>
-            <span>{transaction.cashier_id}</span>
+            <span>{transaction.cashier?.name || transaction.cashier_id}</span>
           </div>
           {transaction.vehicle_plate && (
              <div className="flex justify-between">

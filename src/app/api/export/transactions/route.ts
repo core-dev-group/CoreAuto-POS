@@ -9,6 +9,11 @@ export async function GET(req: Request) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
+  const role = (session.user as any).role;
+  if (role !== "SUPER_ADMIN" && role !== "KEPALA_CABANG") {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
+
   const { searchParams } = new URL(req.url);
   const start = searchParams.get("start");
   const end = searchParams.get("end");
@@ -46,13 +51,21 @@ export async function GET(req: Request) {
 
   // Build CSV
   const header = ["Invoice", "Cabang", "Tanggal", "Tipe Item", "Nama Item", "Mekanik", "Qty", "Harga Satuan", "Subtotal"];
-  
+
   const rows = [header.join(",")];
+
+  const escapeCSV = (val: any) => {
+    if (val === null || val === undefined) return '""';
+    const str = String(val);
+    const escaped = str.replace(/"/g, '""');
+    if (/^[=+\-@]/.test(escaped)) return `"'${escaped}"`;
+    return `"${escaped}"`;
+  };
 
   transactions.forEach(trx => {
     const date = new Date(trx.created_at).toISOString().split('T')[0];
-    const branchName = `"${trx.branch.name}"`;
-    const invoice = `"${trx.invoice_number}"`;
+    const branchName = escapeCSV(trx.branch.name);
+    const invoice = escapeCSV(trx.invoice_number);
 
     if (trx.items.length === 0) {
       // Empty transaction case
@@ -64,13 +77,13 @@ export async function GET(req: Request) {
       let name = "";
       if (item.product) {
         type = "Barang";
-        name = `"${item.product.name}"`;
+        name = escapeCSV(item.product.name);
       } else if (item.service_item) {
         type = "Jasa";
-        name = `"${item.service_item.name}"`;
+        name = escapeCSV(item.service_item.name);
       }
 
-      const mechanic = item.mechanic ? `"${item.mechanic.name}"` : '""';
+      const mechanic = item.mechanic ? escapeCSV(item.mechanic.name) : '""';
       
       rows.push([
         invoice,

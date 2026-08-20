@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { branchSchema, parseFormData } from "@/lib/validations";
 
 export async function getBranches(page = 1, limit = 10) {
@@ -23,6 +25,9 @@ export async function getBranches(page = 1, limit = 10) {
 }
 
 export async function createBranch(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
   const data = parseFormData(branchSchema, formData);
 
   if (data.is_central) {
@@ -37,6 +42,9 @@ export async function createBranch(formData: FormData) {
 }
 
 export async function updateBranch(id: string, formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
   const data = parseFormData(branchSchema, formData);
 
   if (data.is_central) {
@@ -51,6 +59,9 @@ export async function updateBranch(id: string, formData: FormData) {
 }
 
 export async function deleteBranch(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
   await prisma.branch.delete({ where: { id } });
   revalidatePath("/cabang");
 }

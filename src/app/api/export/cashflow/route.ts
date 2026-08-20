@@ -9,6 +9,11 @@ export async function GET(req: Request) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
+  const role = (session.user as any).role;
+  if (role !== "SUPER_ADMIN" && role !== "KEPALA_CABANG") {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
+
   const { searchParams } = new URL(req.url);
   const start = searchParams.get("start");
   const end = searchParams.get("end");
@@ -39,17 +44,25 @@ export async function GET(req: Request) {
 
   // Build CSV
   const header = ["Cabang", "Tanggal", "Tipe", "Kategori", "Nominal", "Deskripsi", "Dicatat Oleh"];
-  
+
   const rows = [header.join(",")];
+
+  const escapeCSV = (val: any) => {
+    if (val === null || val === undefined) return '""';
+    const str = String(val);
+    const escaped = str.replace(/"/g, '""');
+    if (/^[=+\-@]/.test(escaped)) return `"'${escaped}"`;
+    return `"${escaped}"`;
+  };
 
   cashflows.forEach(cf => {
     const date = new Date(cf.created_at).toISOString().split('T')[0];
-    const branchName = `"${cf.branch.name}"`;
-    const type = `"${cf.type}"`;
-    const category = `"${cf.category}"`;
+    const branchName = escapeCSV(cf.branch.name);
+    const type = escapeCSV(cf.type);
+    const category = escapeCSV(cf.category);
     const amount = cf.amount;
-    const desc = `"${cf.description || ""}"`;
-    const createdBy = `"${cf.created_by}"`;
+    const desc = escapeCSV(cf.description || "");
+    const createdBy = escapeCSV(cf.created_by);
 
     rows.push([
       branchName,

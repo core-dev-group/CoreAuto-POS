@@ -45,11 +45,40 @@ export async function processCheckout(payload: unknown) {
 
   const { branch_id, vehicle_plate, cart, discount, tax, payment_method } = data;
   const cashier_id = session.user.id;
+  const role = (session.user as any).role;
+  const sessionBranchId = (session.user as any).branchId;
+
+  if (role !== "SUPER_ADMIN" && branch_id !== sessionBranchId) {
+    throw new Error("Forbidden: Tidak dapat membuat transaksi untuk cabang lain.");
+  }
+
+  // Fetch real prices from database to prevent client manipulation
+  const productIds = cart.filter(i => i.type === "BARANG").map(i => i.item_id);
+  const serviceIds = cart.filter(i => i.type === "JASA").map(i => i.item_id);
+
+  const [dbProducts, dbServices] = await Promise.all([
+    prisma.product.findMany({ where: { id: { in: productIds } } }),
+    prisma.serviceItem.findMany({ where: { id: { in: serviceIds } } })
+  ]);
+
+  const productPriceMap = new Map(dbProducts.map(p => [p.id, p.sell_price]));
+  const servicePriceMap = new Map(dbServices.map(s => [s.id, s.default_price]));
 
   let subtotal = 0;
   for (const item of cart) {
-    subtotal += item.price * item.quantity;
+    const realPrice = item.type === "BARANG"
+      ? (productPriceMap.get(item.item_id) ?? 0)
+      : (servicePriceMap.get(item.item_id) ?? 0);
+
+    // Override client price with DB price
+    item.price = realPrice;
+    subtotal += realPrice * item.quantity;
   }
+
+  if (discount > subtotal) {
+    throw new Error("Diskon tidak boleh melebihi subtotal.");
+  }
+
   const total = subtotal - discount + tax;
 
   return await prisma.$transaction(async (tx) => {
@@ -112,6 +141,10 @@ export async function processCheckout(payload: unknown) {
 
       if (!existingTx || existingTx.status === "SELESAI") {
         throw new Error("Transaksi tidak valid atau sudah selesai.");
+      }
+
+      if (role !== "SUPER_ADMIN" && existingTx.branch_id !== sessionBranchId) {
+        throw new Error("Forbidden: Transaksi bukan milik cabang ini.");
       }
 
       for (const item of existingTx.items) {
@@ -202,6 +235,9 @@ export async function processCheckout(payload: unknown) {
 }
 
 export async function searchVehicles(query: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) throw new Error("Unauthorized");
+
   if (!query || query.length < 2) return [];
 
   return await prisma.vehicle.findMany({
@@ -212,6 +248,9 @@ export async function searchVehicles(query: string) {
 }
 
 export async function getActiveTransactions(branch_id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) throw new Error("Unauthorized");
+
   return await prisma.transaction.findMany({
     where: { branch_id, status: "PROSES" },
     include: { customer: true, items: true },
@@ -220,6 +259,9 @@ export async function getActiveTransactions(branch_id: string) {
 }
 
 export async function getTransactionById(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) throw new Error("Unauthorized");
+
   return await prisma.transaction.findUnique({
     where: { id },
     include: {
@@ -243,6 +285,10 @@ export async function deleteTransaction(id: string) {
 
     if (!existingTx || existingTx.status === "SELESAI") {
       throw new Error("Transaksi tidak valid atau sudah selesai.");
+    }
+
+    if ((session.user as any).role !== "SUPER_ADMIN" && existingTx.branch_id !== (session.user as any).branchId) {
+      throw new Error("Forbidden: Transaksi bukan milik cabang ini.");
     }
 
     // Restore stock

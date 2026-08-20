@@ -2,10 +2,17 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { commissionPayoutSchema, parseFormData } from "@/lib/validations";
 import { createAuditLog } from "@/lib/audit";
 
 export async function createCommissionPayout(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || (session.user.role !== "SUPER_ADMIN" && session.user.role !== "KEPALA_CABANG")) {
+    throw new Error("Unauthorized");
+  }
+
   const data = parseFormData(commissionPayoutSchema, formData);
 
   const period_end = new Date(data.end_date);

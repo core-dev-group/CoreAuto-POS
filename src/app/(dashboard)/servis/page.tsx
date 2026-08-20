@@ -2,6 +2,9 @@ import { getServices } from "./actions";
 import { Plus, Edit2, Wrench } from "lucide-react";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 import { Pagination } from "@/components/ui/Pagination";
 
@@ -14,6 +17,9 @@ export default async function ServisPage({
 }: {
   searchParams: Promise<{ page?: string }>;
 }) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role === "KASIR") redirect("/");
+
   const { page } = await searchParams;
   const currentPage = Number(page) || 1;
   const { data: services, totalPages } = await getServices(currentPage);

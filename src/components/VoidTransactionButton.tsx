@@ -41,7 +41,7 @@ export function VoidTransactionButton({ transactionId }: { transactionId: string
                   setIsOpen(false);
                 }
               } catch (e) {
-                console.error(e);
+                console.warn(e);
                 alert("Terjadi kesalahan sistem.");
               } finally {
                 setIsPending(false);

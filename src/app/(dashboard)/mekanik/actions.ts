@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { mechanicSchema, parseFormData } from "@/lib/validations";
 
 export async function getMechanics() {
@@ -12,6 +14,11 @@ export async function getMechanics() {
 }
 
 export async function createMechanic(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || (session.user.role !== "SUPER_ADMIN" && session.user.role !== "KEPALA_CABANG")) {
+    throw new Error("Unauthorized");
+  }
+
   const data = parseFormData(mechanicSchema, formData);
 
   await prisma.mechanic.create({
@@ -28,6 +35,11 @@ export async function createMechanic(formData: FormData) {
 }
 
 export async function updateMechanic(id: string, formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || (session.user.role !== "SUPER_ADMIN" && session.user.role !== "KEPALA_CABANG")) {
+    throw new Error("Unauthorized");
+  }
+
   const data = parseFormData(mechanicSchema, formData);
 
   await prisma.mechanic.update({
@@ -45,6 +57,11 @@ export async function updateMechanic(id: string, formData: FormData) {
 }
 
 export async function deleteMechanic(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || (session.user.role !== "SUPER_ADMIN" && session.user.role !== "KEPALA_CABANG")) {
+    throw new Error("Unauthorized");
+  }
+
   await prisma.mechanic.delete({ where: { id } });
   revalidatePath("/mekanik");
 }

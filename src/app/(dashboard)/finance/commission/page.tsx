@@ -2,6 +2,9 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Users, Banknote, ArrowRight } from "lucide-react";
 import { CustomSelect } from "@/components/ui/CustomSelect";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Komisi Mekanik | CoreAuto POS",
@@ -12,6 +15,9 @@ export default async function CommissionPage({
 }: {
   searchParams: Promise<{ branch?: string }>;
 }) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role === "KASIR") redirect("/");
+
   const { branch } = await searchParams;
   const branches = await prisma.branch.findMany({ orderBy: { name: "asc" } });
   const activeBranchId = branch || (branches.length > 0 ? branches[0].id : undefined);

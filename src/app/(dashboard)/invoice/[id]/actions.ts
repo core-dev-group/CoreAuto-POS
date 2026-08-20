@@ -31,6 +31,10 @@ export async function voidTransaction(formData: FormData) {
       throw new Error("Transaction not found or already cancelled");
     }
 
+    if (session.user.role !== "SUPER_ADMIN" && transaction.branch_id !== (session.user as any).branchId) {
+      throw new Error("Forbidden: Transaksi bukan milik cabang ini.");
+    }
+
     // Return stock for any products
     for (const item of transaction.items) {
       if (item.product_id) {

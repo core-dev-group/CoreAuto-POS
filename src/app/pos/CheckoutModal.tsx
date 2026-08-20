@@ -43,7 +43,7 @@ export default function CheckoutModal({ cart, subtotal, branchId, transactionId,
         w = await createWorker('eng');
         setWorker(w);
       } catch (e) {
-        console.error("Failed to load OCR worker:", e);
+        console.warn("Failed to load OCR worker:", e);
       }
     };
     initWorker();
@@ -82,7 +82,7 @@ export default function CheckoutModal({ cart, subtotal, branchId, transactionId,
         toast.error("Gagal mendeteksi plat nomor. Silakan ketik manual.", { id: toastId });
       }
     } catch (error) {
-      console.error(error);
+      console.warn(error);
       toast.error("Terjadi kesalahan saat membaca gambar.", { id: toastId });
     } finally {
       setIsScanning(false);

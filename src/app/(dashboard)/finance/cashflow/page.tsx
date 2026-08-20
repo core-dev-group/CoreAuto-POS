@@ -4,6 +4,9 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Plus, Wallet, TrendingUp, TrendingDown, Download } from "lucide-react";
 import { CustomSelect } from "@/components/ui/CustomSelect";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Arus Kas | CoreAuto POS",
@@ -14,6 +17,9 @@ export default async function CashflowPage({
 }: {
   searchParams: Promise<{ branch?: string }>;
 }) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role === "KASIR") redirect("/");
+
   const { branch } = await searchParams;
 
   const branches = await prisma.branch.findMany({ orderBy: { name: "asc" } });

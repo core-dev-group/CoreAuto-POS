@@ -16,10 +16,13 @@ export default async function StokPage({
   searchParams: Promise<{ branch?: string; search?: string; page?: string }>;
 }) {
   const { branch: paramBranchId, search, page } = await searchParams;
-  
+
   const session = await getServerSession(authOptions);
-  const isKasir = session?.user?.role === "KASIR";
-  const userBranchId = (session?.user as any)?.branchId;
+  if (!session?.user) {
+    return null;
+  }
+  const isKasir = session.user.role === "KASIR";
+  const userBranchId = (session.user as any).branchId;
   
   // If KASIR, force branchId to their own branch. Otherwise use param.
   const branchId = isKasir ? userBranchId : paramBranchId;

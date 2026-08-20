@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { productSchema, parseFormData } from "@/lib/validations";
 
 export async function getProducts(page = 1, limit = 10) {
@@ -31,6 +33,11 @@ export async function getProducts(page = 1, limit = 10) {
 }
 
 export async function createProduct(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || (session.user.role !== "SUPER_ADMIN" && session.user.role !== "ADMIN_GUDANG_PUSAT")) {
+    throw new Error("Unauthorized");
+  }
+
   const data = parseFormData(productSchema, formData);
 
   const sku = data.sku.trim();
@@ -65,6 +72,11 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(id: string, formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || (session.user.role !== "SUPER_ADMIN" && session.user.role !== "ADMIN_GUDANG_PUSAT")) {
+    throw new Error("Unauthorized");
+  }
+
   const data = parseFormData(productSchema, formData);
 
   const sku = data.sku.trim();
@@ -100,6 +112,11 @@ export async function updateProduct(id: string, formData: FormData) {
 }
 
 export async function deleteProduct(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || (session.user.role !== "SUPER_ADMIN" && session.user.role !== "ADMIN_GUDANG_PUSAT")) {
+    throw new Error("Unauthorized");
+  }
+
   await prisma.product.delete({ where: { id } });
   revalidatePath("/barang");
   revalidatePath("/pos");
