@@ -55,21 +55,21 @@ export default function PrivacyPage() {
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-cyan-300">3. Keamanan Data & Enkripsi</h2>
             <p className="text-gray-300 leading-relaxed text-sm">
-              Perlindungan data Anda adalah prioritas utama kami. Seluruh lalu lintas data dienkripsi menggunakan protokol **SSL/TLS (HTTPS)**. Kata sandi akun disimpan dalam bentuk *hash cryptographic* tingkat tinggi (Bcrypt) dan basis data PostgreSQL hosted terlindungi di infrastructure cloud bersertifikasi keamanan enterprise.
+              Perlindungan data Anda adalah prioritas utama kami. Seluruh lalu lintas data dienkripsi menggunakan protokol <strong>SSL/TLS (HTTPS)</strong>. Kata sandi akun disimpan dalam bentuk <em>hash cryptographic</em> tingkat tinggi (Bcrypt) dan basis data PostgreSQL hosted terlindungi di infrastructure cloud bersertifikasi keamanan enterprise.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-cyan-300">4. Penyimpanan Lokal (Local Storage)</h2>
             <p className="text-gray-300 leading-relaxed text-sm">
-              Sistem menggunakan fitur *Local Storage* pada browser Anda hanya untuk menyimpan preferensi sesi login cepat (*Account Switcher*) secara lokal pada perangkat Anda agar memudahkan pergantian akun operasional kasir.
+              Sistem menggunakan fitur <em>Local Storage</em> pada browser Anda hanya untuk menyimpan preferensi sesi login cepat (<em>Account Switcher</em>) secara lokal pada perangkat Anda agar memudahkan pergantian akun operasional kasir.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-cyan-300">5. Kerahasiaan Pihak Ketiga</h2>
             <p className="text-gray-300 leading-relaxed text-sm">
-              Core Dev Group **tidak pernah menjual, menyewakan, atau membagikan** data operasional internal bengkel Anda kepada pihak ketiga mana pun untuk tujuan komersial atau periklanan.
+              Core Dev Group <strong>tidak pernah menjual, menyewakan, atau membagikan</strong> data operasional internal bengkel Anda kepada pihak ketiga mana pun untuk tujuan komersial atau periklanan.
             </p>
           </section>
 

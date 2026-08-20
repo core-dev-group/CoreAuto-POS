@@ -35,14 +35,14 @@ export default function TermsPage() {
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-cyan-300">1. Ketentuan Umum</h2>
             <p className="text-gray-300 leading-relaxed text-sm">
-              Dengan mengakses dan menggunakan sistem **CoreAuto POS** ("Layanan"), Anda menyatakan telah membaca, memahami, dan menyetujui seluruh Syarat dan Ketentuan yang ditetapkan oleh **Core Dev Group**. Jika Anda tidak menyetujui salah satu ketentuan ini, Anda tidak diperkenankan menggunakan Layanan.
+              Dengan mengakses dan menggunakan sistem <strong>CoreAuto POS</strong> ("Layanan"), Anda menyatakan telah membaca, memahami, dan menyetujui seluruh Syarat dan Ketentuan yang ditetapkan oleh <strong>Core Dev Group</strong>. Jika Anda tidak menyetujui salah satu ketentuan ini, Anda tidak diperkenankan menggunakan Layanan.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-cyan-300">2. Lisensi & Hak Penggunaan</h2>
             <p className="text-gray-300 leading-relaxed text-sm">
-              CoreAuto POS memberikan lisensi terbatas, non-eksklusif, dan tidak dapat dipindahtangankan kepada pengguna terdaftar untuk mengoperasikan sistem Point of Sale, manajemen stok cabang, dan pelaporan keuangan sesuai dengan peran (*role*) hak akses yang diberikan oleh administrator sistem.
+              CoreAuto POS memberikan lisensi terbatas, non-eksklusif, dan tidak dapat dipindahtangankan kepada pengguna terdaftar untuk mengoperasikan sistem Point of Sale, manajemen stok cabang, dan pelaporan keuangan sesuai dengan peran (<em>role</em>) hak akses yang diberikan oleh administrator sistem.
             </p>
           </section>
 
@@ -63,7 +63,7 @@ export default function TermsPage() {
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-cyan-300">5. Pembatasan Tanggung Jawab</h2>
             <p className="text-gray-300 leading-relaxed text-sm">
-              Core Dev Group berupaya menjaga keandalan sistem hingga 99.9% uptime. Namun, kami tidak bertanggung jawab atas kerugian tidak langsung yang disebabkan oleh gangguan koneksi internet lokal pengguna, kesalahan pemutakhiran data manusia (*human error*), atau kendala pihak ketiga di luar kendali teknis kami.
+              Core Dev Group berupaya menjaga keandalan sistem hingga 99.9% uptime. Namun, kami tidak bertanggung jawab atas kerugian tidak langsung yang disebabkan oleh gangguan koneksi internet lokal pengguna, kesalahan pemutakhiran data manusia (<em>human error</em>), atau kendala pihak ketiga di luar kendali teknis kami.
             </p>
           </section>
 
