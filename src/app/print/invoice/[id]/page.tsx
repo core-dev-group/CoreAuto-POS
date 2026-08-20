@@ -19,7 +19,6 @@ export default async function PrintInvoicePage({
     where: { id },
     include: {
       branch: true,
-      cashier: true,
       items: {
         include: {
           product: true,
@@ -32,6 +31,11 @@ export default async function PrintInvoicePage({
   if (!transaction) {
     notFound();
   }
+
+  // Fetch cashier info separately since there is no Prisma relation defined
+  const cashier = await prisma.user.findUnique({
+    where: { id: transaction.cashier_id }
+  });
 
   const hasDifference = transaction.total !== transaction.subtotal;
 
@@ -59,7 +63,7 @@ export default async function PrintInvoicePage({
           </div>
           <div className="flex justify-between">
             <span>Kasir:</span>
-            <span>{transaction.cashier?.name || transaction.cashier_id}</span>
+            <span>{cashier?.name || transaction.cashier_id}</span>
           </div>
           {transaction.vehicle_plate && (
              <div className="flex justify-between">
