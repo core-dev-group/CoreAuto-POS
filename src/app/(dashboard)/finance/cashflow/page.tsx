@@ -7,6 +7,8 @@ import { CustomSelect } from "@/components/ui/CustomSelect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { ClientDate } from "@/components/ClientDate";
+import { DeleteCashflowButton } from "@/components/DeleteCashflowButton";
 
 export const metadata = {
   title: "Arus Kas | CoreAuto POS",
@@ -131,12 +133,15 @@ export default async function CashflowPage({
                 <th className="px-3 md:px-4 py-2 md:py-3 font-semibold">Keterangan</th>
                 <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-right">Nominal</th>
                 <th className="px-3 md:px-4 py-2 md:py-3 font-semibold">Pembuat</th>
+                {(session.user.role === "OWNER" || session.user.role === "SUPERADMIN") && (
+                  <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-center w-16">Aksi</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 text-xs md:text-sm">
               {cashflows.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-3 md:px-4 py-8 text-center text-gray-500">
+                  <td colSpan={(session.user.role === "OWNER" || session.user.role === "SUPERADMIN") ? 7 : 6} className="px-3 md:px-4 py-8 text-center text-gray-500">
                     Belum ada data arus kas.
                   </td>
                 </tr>
@@ -144,7 +149,7 @@ export default async function CashflowPage({
                 cashflows.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-3 md:px-4 py-2 md:py-3 text-gray-600">
-                      {format(new Date(item.created_at), "dd MMM yyyy, HH:mm", { locale: id })}
+                      <ClientDate date={item.created_at} formatStr="dd MMM yyyy, HH:mm" />
                     </td>
                     <td className="px-3 md:px-4 py-2 md:py-3">
                       {item.type === "MASUK" ? (
@@ -163,6 +168,11 @@ export default async function CashflowPage({
                       Rp {item.amount.toLocaleString("id-ID")}
                     </td>
                     <td className="px-3 md:px-4 py-2 md:py-3 text-gray-500">{item.created_by}</td>
+                    {(session.user.role === "OWNER" || session.user.role === "SUPERADMIN") && (
+                      <td className="px-3 md:px-4 py-2 md:py-3 text-center">
+                        <DeleteCashflowButton id={item.id} />
+                      </td>
+                    )}
                   </tr>
                 ))
               )}

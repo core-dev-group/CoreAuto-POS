@@ -26,3 +26,17 @@ export async function createCashflow(formData: FormData) {
 
   revalidatePath("/finance/cashflow");
 }
+
+export async function deleteCashflow(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) throw new Error("Unauthorized");
+  if (session.user.role !== "OWNER" && session.user.role !== "SUPERADMIN") {
+    throw new Error("Hanya OWNER yang dapat menghapus data arus kas");
+  }
+
+  await prisma.cashflowEntry.delete({
+    where: { id },
+  });
+
+  revalidatePath("/finance/cashflow");
+}
