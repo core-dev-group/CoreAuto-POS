@@ -1,7 +1,7 @@
 {
-  "name": "Bengkelin POS & Inventory",
-  "short_name": "Bengkelin",
-  "description": "Sistem POS dan Manajemen Inventaris Multi-Cabang untuk Bengkel",
+  "name": "CoreAuto POS & Inventory",
+  "short_name": "CoreAuto POS",
+  "description": "Sistem POS dan Manajemen Inventaris Multi-Cabang untuk Bengkel Modern by Core Dev Group",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
