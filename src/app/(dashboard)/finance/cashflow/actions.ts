@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { cashflowSchema, parseFormData } from "@/lib/validations";
+import { createAuditLog } from "@/lib/audit";
 
 export async function createCashflow(formData: FormData) {
   const session = await getServerSession(authOptions);
@@ -24,15 +25,11 @@ export async function createCashflow(formData: FormData) {
     },
   });
 
-  await prisma.auditLog.create({
-    data: {
-      user_id: session.user.id,
-      branch_id: data.branch_id,
-      action: "CREATE",
-      entity: "Cashflow",
-      entity_id: cashflow.id,
-      details: `Membuat pencatatan arus kas ${data.type} sebesar Rp${data.amount}`,
-    },
+  await createAuditLog({
+    action: "CREATE_CASHFLOW",
+    entity: "Cashflow",
+    entity_id: cashflow.id,
+    details: { type: data.type, amount: data.amount, description: data.description },
   });
 
   revalidatePath("/finance/cashflow");
@@ -41,7 +38,7 @@ export async function createCashflow(formData: FormData) {
 export async function deleteCashflow(id: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
-  if (session.user.role !== "OWNER" && session.user.role !== "SUPERADMIN") {
+  if (session.user.role !== "OWNER" && session.user.role !== "SUPER_ADMIN") {
     throw new Error("Hanya OWNER yang dapat menghapus data arus kas");
   }
 
@@ -52,15 +49,11 @@ export async function deleteCashflow(id: string) {
     where: { id },
   });
 
-  await prisma.auditLog.create({
-    data: {
-      user_id: session.user.id,
-      branch_id: cashflow.branch_id,
-      action: "DELETE",
-      entity: "Cashflow",
-      entity_id: id,
-      details: `Menghapus pencatatan arus kas ${cashflow.type} sebesar Rp${cashflow.amount}`,
-    },
+  await createAuditLog({
+    action: "DELETE_CASHFLOW",
+    entity: "Cashflow",
+    entity_id: id,
+    details: { type: cashflow.type, amount: cashflow.amount, description: cashflow.description },
   });
 
   revalidatePath("/finance/cashflow");

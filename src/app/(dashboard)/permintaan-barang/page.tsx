@@ -6,18 +6,26 @@ import { id } from "date-fns/locale";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import ActionButtons from "./ActionButtons";
+import { Pagination } from "@/components/ui/Pagination";
 
 export const metadata = {
   title: "Permintaan Barang | CoreAuto POS",
 };
 
-export default async function PermintaanBarangPage() {
-  const requests = await getRequests();
+export default async function PermintaanBarangPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
   const session = await getServerSession(authOptions);
   const userRole = session?.user?.role as string;
   const isCentralAdmin = userRole === "SUPER_ADMIN" || userRole === "ADMIN_GUDANG_PUSAT";
   const isBranchAdmin = userRole === "KEPALA_CABANG" || userRole === "ADMIN_GUDANG";
   const isKasir = userRole === "KASIR";
+
+  const { page } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const { data: requests, totalPages } = await getRequests(currentPage);
 
   return (
     <div className="space-y-5">
@@ -130,6 +138,7 @@ export default async function PermintaanBarangPage() {
             </tbody>
           </table>
         </div>
+        <Pagination totalPages={totalPages} />
       </div>
     </div>
   );

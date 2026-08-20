@@ -230,6 +230,18 @@ export async function processCheckout(payload: unknown) {
       }
     }
 
+    const auditAction = data.transaction_id ? "UPDATE_TRANSACTION" : "CREATE_TRANSACTION";
+    await tx.auditLog.create({
+      data: {
+        user_id: session.user.id,
+        branch_id: transaction.branch_id,
+        action: auditAction,
+        entity: "Transaction",
+        entity_id: transaction.id,
+        details: JSON.stringify({ invoice_number: transaction.invoice_number, total: transaction.total, status: transaction.status }),
+      }
+    });
+
     return transaction.id;
   });
 }
@@ -305,6 +317,17 @@ export async function deleteTransaction(id: string) {
     await tx.transaction.update({
       where: { id },
       data: { status: "DIBATALKAN" }
+    });
+
+    await tx.auditLog.create({
+      data: {
+        user_id: session.user.id,
+        branch_id: existingTx.branch_id,
+        action: "VOID_TRANSACTION",
+        entity: "Transaction",
+        entity_id: existingTx.id,
+        details: JSON.stringify({ invoice_number: existingTx.invoice_number, total: existingTx.total }),
+      }
     });
 
     return true;

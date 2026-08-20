@@ -5,8 +5,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createAuditLog } from "@/lib/audit";
 
-export async function getRequests() {
+export async function getRequests(page = 1, limit = 10) {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
 
@@ -23,13 +24,20 @@ export async function getRequests() {
     whereClause = { to_branch_id: branchId };
   }
 
-  const requests = await prisma.stockTransfer.findMany({
-    where: whereClause,
-    include: {
-      product: true,
-    },
-    orderBy: { created_at: "desc" },
-  });
+  const skip = (page - 1) * limit;
+
+  const [requests, total] = await Promise.all([
+    prisma.stockTransfer.findMany({
+      where: whereClause,
+      include: {
+        product: true,
+      },
+      orderBy: { created_at: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.stockTransfer.count({ where: whereClause })
+  ]);
 
   // We need branch names. Let's fetch all branches and attach.
   const branches = await prisma.branch.findMany();
@@ -38,11 +46,13 @@ export async function getRequests() {
     return acc;
   }, {} as Record<string, string>);
 
-  return requests.map(req => ({
+  const data = requests.map(req => ({
     ...req,
     from_branch_name: branchMap[req.from_branch_id] || "Unknown",
     to_branch_name: branchMap[req.to_branch_id] || "Unknown",
   }));
+
+  return { data, totalPages: Math.ceil(total / limit) };
 }
 
 export async function createRequest(formData: FormData) {
@@ -89,15 +99,23 @@ export async function createRequest(formData: FormData) {
     throw new Error("Gudang Pusat tidak perlu melakukan request ke dirinya sendiri.");
   }
 
-  await prisma.stockTransfer.create({
+  const status = role === "KASIR" ? "MENUNGGU_CABANG" : "PENDING";
+  const request = await prisma.stockTransfer.create({
     data: {
       product_id,
       quantity,
       from_branch_id: centralBranch.id,
       to_branch_id: branchId,
-      status: role === "KASIR" ? "MENUNGGU_CABANG" : "PENDING",
+      status,
       requested_by: user_name,
     }
+  });
+
+  await createAuditLog({
+    action: "CREATE_STOCK_REQUEST",
+    entity: "StockTransfer",
+    entity_id: request.id,
+    details: { quantity, product_id, status }
   });
 
   revalidatePath("/permintaan-barang");
@@ -159,6 +177,17 @@ export async function approveRequest(id: string) {
         note: `Pengiriman ke Cabang (Ref: ${id})`,
         created_by: user_name,
         reference_id: id,
+      }
+    });
+
+    await tx.auditLog.create({
+      data: {
+        user_id: session.user.id,
+        branch_id: request.from_branch_id,
+        action: "APPROVE_STOCK_REQUEST",
+        entity: "StockTransfer",
+        entity_id: id,
+        details: JSON.stringify({ quantity: request.quantity, product_id: request.product_id }),
       }
     });
   });
@@ -229,6 +258,17 @@ export async function receiveRequest(id: string) {
         reference_id: id,
       }
     });
+
+    await tx.auditLog.create({
+      data: {
+        user_id: session.user.id,
+        branch_id: request.to_branch_id,
+        action: "RECEIVE_STOCK_REQUEST",
+        entity: "StockTransfer",
+        entity_id: id,
+        details: JSON.stringify({ quantity: request.quantity, product_id: request.product_id }),
+      }
+    });
   });
 
   revalidatePath("/permintaan-barang");
@@ -259,6 +299,13 @@ export async function rejectRequest(id: string, reason: string) {
     }
   });
 
+  await createAuditLog({
+    action: "REJECT_STOCK_REQUEST",
+    entity: "StockTransfer",
+    entity_id: id,
+    details: { reason, status: request.status }
+  });
+
   revalidatePath("/permintaan-barang");
 }
 
@@ -276,6 +323,13 @@ export async function forwardRequest(id: string) {
     data: {
       status: "PENDING",
     }
+  });
+
+  await createAuditLog({
+    action: "FORWARD_STOCK_REQUEST",
+    entity: "StockTransfer",
+    entity_id: id,
+    details: { status: "PENDING" }
   });
 
   revalidatePath("/permintaan-barang");

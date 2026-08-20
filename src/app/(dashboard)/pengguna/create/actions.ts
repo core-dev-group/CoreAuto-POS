@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 import { userSchema, parseFormData } from "@/lib/validations";
+import { createAuditLog } from "@/lib/audit";
 
 export async function createUser(formData: FormData) {
   const session = await getServerSession(authOptions);
@@ -27,7 +28,7 @@ export async function createUser(formData: FormData) {
 
   const password_hash = await bcrypt.hash(data.password, 10);
 
-  await prisma.user.create({
+  const newUser = await prisma.user.create({
     data: {
       name: data.name,
       email: data.email,
@@ -35,6 +36,13 @@ export async function createUser(formData: FormData) {
       branch_id,
       password_hash,
     },
+  });
+
+  await createAuditLog({
+    action: "CREATE_USER",
+    entity: "User",
+    entity_id: newUser.id,
+    details: { name: newUser.name, email: newUser.email, role: newUser.role, branch_id: newUser.branch_id },
   });
 
   revalidatePath("/pengguna");

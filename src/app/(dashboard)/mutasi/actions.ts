@@ -66,6 +66,17 @@ export async function createMutation(formData: FormData) {
         },
       });
     }
+
+    await tx.auditLog.create({
+      data: {
+        user_id: session.user.id,
+        branch_id: data.branch_id,
+        action: "STOCK_MUTATION",
+        entity: "StockMutation",
+        entity_id: data.product_id,
+        details: JSON.stringify({ type: data.type, quantity: data.quantity, note: data.note }),
+      }
+    });
   });
 
   revalidatePath("/mutasi");

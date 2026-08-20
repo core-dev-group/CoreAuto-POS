@@ -241,7 +241,7 @@ export default function LoginPage() {
                 <div className="flex items-start gap-3 mt-2 mb-2">
                   <input type="checkbox" required id="tos_saved" className="mt-0.5 w-4 h-4 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-black/20 cursor-pointer" />
                   <label htmlFor="tos_saved" className="text-xs text-gray-400 leading-relaxed cursor-pointer">
-                    Saya menyetujui <a href="/terms" target="_blank" className="text-cyan-400 hover:underline">Syarat & Ketentuan</a> serta <a href="/privacy" target="_blank" className="text-cyan-400 hover:underline">Kebijakan Privasi</a> yang berlaku.
+                    Saya menyetujui <a href="/terms" target="_blank" onClick={(e) => e.stopPropagation()} className="text-cyan-400 hover:underline">Syarat & Ketentuan</a> serta <a href="/privacy" target="_blank" onClick={(e) => e.stopPropagation()} className="text-cyan-400 hover:underline">Kebijakan Privasi</a> yang berlaku.
                   </label>
                 </div>
                 
@@ -338,7 +338,7 @@ export default function LoginPage() {
                 <div className="flex items-start gap-3 mt-2 mb-2">
                   <input type="checkbox" required id="tos_login" className="mt-0.5 w-4 h-4 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-black/20 cursor-pointer" />
                   <label htmlFor="tos_login" className="text-xs text-gray-400 leading-relaxed cursor-pointer">
-                    Saya menyetujui <a href="/terms" target="_blank" className="text-cyan-400 hover:underline">Syarat & Ketentuan</a> serta <a href="/privacy" target="_blank" className="text-cyan-400 hover:underline">Kebijakan Privasi</a> yang berlaku.
+                    Saya menyetujui <a href="/terms" target="_blank" onClick={(e) => e.stopPropagation()} className="text-cyan-400 hover:underline">Syarat & Ketentuan</a> serta <a href="/privacy" target="_blank" onClick={(e) => e.stopPropagation()} className="text-cyan-400 hover:underline">Kebijakan Privasi</a> yang berlaku.
                   </label>
                 </div>
 

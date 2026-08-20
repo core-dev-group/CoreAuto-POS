@@ -132,98 +132,108 @@ export default async function AuditLogPage({
         </div>
         
         <div className="overflow-x-auto">
-          {logs.length === 0 ? (
-            <div className="p-8 text-center text-gray-500 border-t border-gray-100">Tidak ada log aktivitas pada rentang ini.</div>
-          ) : (
-            <div className="divide-y divide-gray-100">
-              {/* Desktop Table Header */}
-              <div className="hidden md:grid md:grid-cols-5 gap-4 p-4 bg-white border-b border-gray-200 text-gray-600 text-sm font-semibold">
-                <div>Waktu</div>
-                <div>Aktor / Cabang</div>
-                <div>Tindakan</div>
-                <div>Entitas</div>
-                <div>Detail</div>
-              </div>
-              
-              {/* Rows */}
-              {logs.map((log) => {
-                let parsedDetails: any = null;
-                if (log.details) {
-                  try {
-                    parsedDetails = JSON.parse(log.details);
-                  } catch (e) {
-                    parsedDetails = log.details;
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-50 text-gray-600 border-b border-gray-100">
+                <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-xs md:text-sm">Waktu</th>
+                <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-xs md:text-sm">Aktor / Cabang</th>
+                <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-xs md:text-sm">Aksi</th>
+                <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-xs md:text-sm">Entitas</th>
+                <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-xs md:text-sm hidden md:table-cell">Detail</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 text-xs md:text-sm">
+              {logs.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-3 md:px-4 py-8 text-center text-gray-500">
+                    Tidak ada log aktivitas pada rentang ini.
+                  </td>
+                </tr>
+              ) : (
+                logs.map((log) => {
+                  let parsedDetails: any = null;
+                  if (log.details) {
+                    try {
+                      parsedDetails = JSON.parse(log.details);
+                    } catch (e) {
+                      parsedDetails = log.details;
+                    }
                   }
-                }
 
-                return (
-                  <div key={log.id} className="p-4 hover:bg-gray-50 flex flex-col md:grid md:grid-cols-5 gap-4 md:items-start text-sm">
-                    {/* Waktu */}
-                    <div className="text-gray-500 text-xs md:text-sm flex justify-between md:block">
-                      <span className="md:hidden font-semibold text-gray-700">Waktu:</span>
-                      {format(new Date(log.created_at), "dd MMM yyyy HH:mm", { locale: localeId })}
-                    </div>
-                    
-                    {/* Aktor / Cabang */}
-                    <div className="flex justify-between md:block">
-                      <span className="md:hidden font-semibold text-gray-700">Aktor / Cabang:</span>
-                      <div className="text-right md:text-left">
+                  return (
+                    <tr key={log.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-3 md:px-4 py-2 md:py-3 align-top">
+                        {format(new Date(log.created_at), "dd MMM yyyy, HH:mm", { locale: localeId })}
+                      </td>
+                      <td className="px-3 md:px-4 py-2 md:py-3 align-top">
                         <div className="font-medium text-gray-900">{log.user.name}</div>
                         <div className="text-xs text-gray-500">{log.branch?.name || "Pusat"}</div>
-                      </div>
-                    </div>
-
-                    {/* Tindakan */}
-                    <div className="flex justify-between md:block">
-                      <span className="md:hidden font-semibold text-gray-700">Aksi:</span>
-                      <span className={`inline-block px-2 py-1 rounded text-xs font-semibold
-                        ${log.action.includes('VOID') ? 'bg-red-100 text-red-700' : ''}
-                        ${log.action.includes('CREATE') ? 'bg-blue-100 text-blue-700' : ''}
-                        ${log.action.includes('SHIFT') ? 'bg-purple-100 text-purple-700' : ''}
-                        ${!log.action.includes('VOID') && !log.action.includes('CREATE') && !log.action.includes('SHIFT') ? 'bg-gray-100 text-gray-700' : ''}
-                      `}>
-                        {log.action}
-                      </span>
-                    </div>
-
-                    {/* Entitas */}
-                    <div className="flex justify-between md:block text-gray-600">
-                      <span className="md:hidden font-semibold text-gray-700">Entitas:</span>
-                      <div className="text-right md:text-left">
-                        <div>{log.entity}</div>
+                      </td>
+                      <td className="px-3 md:px-4 py-2 md:py-3 align-top">
+                        <span className={`inline-block px-2 py-1 rounded text-[11px] font-semibold tracking-wide uppercase
+                          ${log.action.includes('VOID') || log.action.includes('DELETE') ? 'bg-red-100 text-red-700' : ''}
+                          ${log.action.includes('CREATE') || log.action.includes('OPEN') ? 'bg-blue-100 text-blue-700' : ''}
+                          ${log.action.includes('UPDATE') || log.action.includes('EDIT') ? 'bg-amber-100 text-amber-700' : ''}
+                          ${log.action.includes('SHIFT') || log.action.includes('MUTATION') ? 'bg-purple-100 text-purple-700' : ''}
+                          ${!log.action.includes('VOID') && !log.action.includes('DELETE') && !log.action.includes('CREATE') && !log.action.includes('OPEN') && !log.action.includes('UPDATE') && !log.action.includes('EDIT') && !log.action.includes('SHIFT') && !log.action.includes('MUTATION') ? 'bg-gray-100 text-gray-700' : ''}
+                        `}>
+                          {log.action.replace(/_/g, ' ')}
+                        </span>
+                      </td>
+                      <td className="px-3 md:px-4 py-2 md:py-3 align-top text-gray-700">
+                        <div className="font-medium">{log.entity}</div>
                         {log.entity_id && (
-                          <span className="text-xs text-gray-400 font-mono" title={log.entity_id}>
-                            {log.entity_id.substring(0, 8)}...
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Detail */}
-                    <div className="mt-2 md:mt-0 bg-white md:bg-transparent border md:border-0 border-gray-100 rounded p-2 md:p-0">
-                      <span className="md:hidden font-semibold text-gray-700 text-xs block mb-1">Detail:</span>
-                      {parsedDetails ? (
-                        typeof parsedDetails === 'object' ? (
-                          <div className="space-y-1 text-xs text-gray-700 font-mono">
-                            {Object.entries(parsedDetails).map(([k, v]) => (
-                              <div key={k} className="flex gap-2">
-                                <span className="font-semibold text-gray-900">{k.replace(/_/g, ' ')}:</span>
-                                <span>{String(v)}</span>
-                              </div>
-                            ))}
+                          <div className="text-[10px] text-gray-400 font-mono mt-0.5" title={log.entity_id}>
+                            ID: {log.entity_id.substring(0, 8)}...
                           </div>
+                        )}
+                        {/* Mobile view for details */}
+                        <div className="md:hidden mt-2 p-2 bg-gray-50 rounded border border-gray-100 text-[11px]">
+                          <span className="font-semibold text-gray-500 mb-1 block">Detail:</span>
+                          {parsedDetails ? (
+                            typeof parsedDetails === 'object' ? (
+                              <div className="space-y-0.5 font-mono">
+                                {Object.entries(parsedDetails).map(([k, v]) => (
+                                  <div key={k} className="flex gap-1.5 break-all">
+                                    <span className="text-gray-500">{k}:</span>
+                                    <span className="text-gray-900">{String(v)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="font-mono break-all text-gray-600">{String(parsedDetails)}</div>
+                            )
+                          ) : (
+                            <div className="text-gray-400">-</div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-3 md:px-4 py-2 md:py-3 align-top hidden md:table-cell">
+                        {parsedDetails ? (
+                          typeof parsedDetails === 'object' ? (
+                            <div className="space-y-1 text-xs text-gray-700 font-mono bg-gray-50 p-2 rounded border border-gray-100 max-h-32 overflow-y-auto">
+                              {Object.entries(parsedDetails).map(([k, v]) => (
+                                <div key={k} className="flex gap-2">
+                                  <span className="text-gray-500 font-semibold">{k.replace(/_/g, ' ')}:</span>
+                                  <span className="break-all">{String(v)}</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="text-xs text-gray-600 font-mono break-all bg-gray-50 p-2 rounded border border-gray-100 max-h-32 overflow-y-auto">
+                              {String(parsedDetails)}
+                            </div>
+                          )
                         ) : (
-                          <div className="text-xs text-gray-600 font-mono break-all">{String(parsedDetails)}</div>
-                        )
-                      ) : (
-                        <div className="text-gray-400 text-xs">-</div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                          <div className="text-gray-400 text-xs italic">-</div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
         <Pagination totalPages={totalPages} />
       </div>

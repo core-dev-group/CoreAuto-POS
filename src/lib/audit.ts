@@ -2,13 +2,7 @@ import { prisma } from "./prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth";
 
-type AuditAction = 
-  | "CREATE_TRANSACTION"
-  | "VOID_TRANSACTION"
-  | "STOCK_MUTATION"
-  | "OPEN_SHIFT"
-  | "CLOSE_SHIFT"
-  | "PAY_COMMISSION";
+type AuditAction = string;
 
 export async function createAuditLog({
   action,

@@ -63,17 +63,21 @@ export default function Sidebar({ session, onClick }: { session?: any, onClick?:
             <Home size={18} /> Dashboard
           </Link>
         )}
-        <Link onClick={onClick} href="/pos" className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${pathname === "/pos" ? "bg-gray-800 text-blue-400" : "hover:bg-gray-800"}`}>
-          <ShoppingCart size={18} /> Point of Sale
-        </Link>
-        <Link onClick={onClick} href="/pos/shift" className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${pathname.startsWith("/pos/shift") ? "bg-gray-800 text-blue-400" : "hover:bg-gray-800"}`}>
-          <Wallet size={18} /> Tutup Kasir / Shift
-        </Link>
-        
-        <div className="text-[11px] font-bold text-gray-500 uppercase tracking-widest px-1 mb-2 mt-6">Transaksi</div>
-        <Link onClick={onClick} href="/invoice" className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${pathname.startsWith("/invoice") ? "bg-gray-800 text-blue-400" : "hover:bg-gray-800"}`}>
-          <Receipt size={18} /> Riwayat Invoice
-        </Link>
+        {session?.user?.role !== "ADMIN_GUDANG_PUSAT" && (
+          <>
+            <Link onClick={onClick} href="/pos" className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${pathname === "/pos" ? "bg-gray-800 text-blue-400" : "hover:bg-gray-800"}`}>
+              <ShoppingCart size={18} /> Point of Sale
+            </Link>
+            <Link onClick={onClick} href="/pos/shift" className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${pathname.startsWith("/pos/shift") ? "bg-gray-800 text-blue-400" : "hover:bg-gray-800"}`}>
+              <Wallet size={18} /> Tutup Kasir / Shift
+            </Link>
+            
+            <div className="text-[11px] font-bold text-gray-500 uppercase tracking-widest px-1 mb-2 mt-6">Transaksi</div>
+            <Link onClick={onClick} href="/invoice" className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${pathname.startsWith("/invoice") ? "bg-gray-800 text-blue-400" : "hover:bg-gray-800"}`}>
+              <Receipt size={18} /> Riwayat Invoice
+            </Link>
+          </>
+        )}
         
         <div className="text-[11px] font-bold text-gray-500 uppercase tracking-widest px-1 mb-2 mt-6">Inventaris</div>
         <Link onClick={onClick} href="/stok" className={`flex items-center gap-3 p-2 rounded-lg transition-colors ${pathname.startsWith("/stok") ? "bg-gray-800 text-blue-400" : "hover:bg-gray-800"}`}>
@@ -149,11 +153,6 @@ export default function Sidebar({ session, onClick }: { session?: any, onClick?:
         <button onClick={handleLogout} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-red-900/50 text-red-400 transition-colors text-sm font-medium">
           <LogOut size={18} /> Keluar
         </button>
-        <div className="text-[10px] text-center text-gray-500 font-medium tracking-wider uppercase pt-1 space-y-1">
-          <div>
-            Powered by <a href="https://core-dev-group.my.id" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white font-semibold underline decoration-dotted transition-colors">Core Dev Group</a>
-          </div>
-        </div>
       </div>
     </div>
   );

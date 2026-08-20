@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { productSchema, parseFormData } from "@/lib/validations";
+import { createAuditLog } from "@/lib/audit";
 
 export async function getProducts(page = 1, limit = 10) {
   const skip = (page - 1) * limit;
@@ -54,7 +55,7 @@ export async function createProduct(formData: FormData) {
     }
   }
 
-  await prisma.product.create({
+  const product = await prisma.product.create({
     data: {
       sku,
       barcode,
@@ -64,6 +65,13 @@ export async function createProduct(formData: FormData) {
       sell_price: data.sell_price,
       min_stock_threshold_default: data.min_stock_threshold_default,
     },
+  });
+
+  await createAuditLog({
+    action: "CREATE_PRODUCT",
+    entity: "Product",
+    entity_id: product.id,
+    details: { name: product.name, sku: product.sku, barcode: product.barcode, sell_price: product.sell_price },
   });
 
   revalidatePath("/barang");
@@ -93,7 +101,7 @@ export async function updateProduct(id: string, formData: FormData) {
     }
   }
 
-  await prisma.product.update({
+  const product = await prisma.product.update({
     where: { id },
     data: {
       sku,
@@ -104,6 +112,13 @@ export async function updateProduct(id: string, formData: FormData) {
       sell_price: data.sell_price,
       min_stock_threshold_default: data.min_stock_threshold_default,
     },
+  });
+
+  await createAuditLog({
+    action: "UPDATE_PRODUCT",
+    entity: "Product",
+    entity_id: product.id,
+    details: { name: product.name, sku: product.sku, barcode: product.barcode, sell_price: product.sell_price },
   });
 
   revalidatePath("/barang");
@@ -117,7 +132,20 @@ export async function deleteProduct(id: string) {
     throw new Error("Unauthorized");
   }
 
+  const product = await prisma.product.findUnique({ where: { id } });
+  if (!product) {
+    throw new Error("Barang tidak ditemukan");
+  }
+
   await prisma.product.delete({ where: { id } });
+
+  await createAuditLog({
+    action: "DELETE_PRODUCT",
+    entity: "Product",
+    entity_id: id,
+    details: { name: product.name, sku: product.sku },
+  });
+
   revalidatePath("/barang");
   revalidatePath("/pos");
   revalidatePath("/stok");

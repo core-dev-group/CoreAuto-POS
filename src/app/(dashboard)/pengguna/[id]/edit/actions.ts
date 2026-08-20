@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 import { z } from "zod";
+import { createAuditLog } from "@/lib/audit";
 
 const updateUserSchema = z.object({
   name: z.string().min(1, "Nama wajib diisi"),
@@ -55,9 +56,16 @@ export async function updateUser(id: string, formData: FormData) {
     updateData.password_hash = await bcrypt.hash(data.password, 10);
   }
 
-  await prisma.user.update({
+  const updatedUser = await prisma.user.update({
     where: { id },
     data: updateData,
+  });
+
+  await createAuditLog({
+    action: "UPDATE_USER",
+    entity: "User",
+    entity_id: updatedUser.id,
+    details: { name: updatedUser.name, email: updatedUser.email, role: updatedUser.role, branch_id: updatedUser.branch_id },
   });
 
   revalidatePath("/pengguna");
@@ -74,8 +82,20 @@ export async function deleteUser(id: string) {
     throw new Error("Anda tidak dapat menghapus akun Anda sendiri.");
   }
 
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) {
+    throw new Error("Pengguna tidak ditemukan.");
+  }
+
   await prisma.user.delete({
     where: { id },
+  });
+
+  await createAuditLog({
+    action: "DELETE_USER",
+    entity: "User",
+    entity_id: id,
+    details: { name: user.name, email: user.email, role: user.role, branch_id: user.branch_id },
   });
 
   revalidatePath("/pengguna");

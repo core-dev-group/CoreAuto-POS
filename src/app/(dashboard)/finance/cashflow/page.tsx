@@ -9,6 +9,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ClientDate } from "@/components/ClientDate";
 import { DeleteCashflowButton } from "@/components/DeleteCashflowButton";
+import { Pagination } from "@/components/ui/Pagination";
 
 export const metadata = {
   title: "Arus Kas | CoreAuto POS",
@@ -17,29 +18,47 @@ export const metadata = {
 export default async function CashflowPage({
   searchParams,
 }: {
-  searchParams: Promise<{ branch?: string }>;
+  searchParams: Promise<{ branch?: string; page?: string }>;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user || session.user.role === "KASIR") redirect("/");
 
-  const { branch } = await searchParams;
+  const { branch, page } = await searchParams;
 
   const branches = await prisma.branch.findMany({ orderBy: { name: "asc" } });
   
   const activeBranchId = branch || (branches.length > 0 ? branches[0].id : undefined);
 
-  const cashflows = await prisma.cashflowEntry.findMany({
-    where: activeBranchId ? { branch_id: activeBranchId } : {},
-    include: { branch: true },
-    orderBy: { created_at: "desc" },
-    take: 100, // Limit for performance
+  const currentPage = Number(page) || 1;
+  const limit = 10;
+  const skip = (currentPage - 1) * limit;
+
+  const whereClause = activeBranchId ? { branch_id: activeBranchId } : {};
+
+  const [cashflows, total] = await Promise.all([
+    prisma.cashflowEntry.findMany({
+      where: whereClause,
+      include: { branch: true },
+      orderBy: { created_at: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.cashflowEntry.count({ where: whereClause })
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  // We still need totals for the branch (independent of pagination)
+  const allCashflows = await prisma.cashflowEntry.findMany({
+    where: whereClause,
+    select: { type: true, amount: true }
   });
 
-  const totalMasuk = cashflows
+  const totalMasuk = allCashflows
     .filter((c) => c.type === "MASUK")
     .reduce((sum, c) => sum + c.amount, 0);
 
-  const totalKeluar = cashflows
+  const totalKeluar = allCashflows
     .filter((c) => c.type === "KELUAR")
     .reduce((sum, c) => sum + c.amount, 0);
 
@@ -133,7 +152,7 @@ export default async function CashflowPage({
                 <th className="px-3 md:px-4 py-2 md:py-3 font-semibold">Keterangan</th>
                 <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-right">Nominal</th>
                 <th className="px-3 md:px-4 py-2 md:py-3 font-semibold">Pembuat</th>
-                {(session.user.role === "OWNER" || session.user.role === "SUPERADMIN") && (
+                {(session.user.role === "OWNER" || session.user.role === "SUPER_ADMIN") && (
                   <th className="px-3 md:px-4 py-2 md:py-3 font-semibold text-center w-16">Aksi</th>
                 )}
               </tr>
@@ -141,7 +160,7 @@ export default async function CashflowPage({
             <tbody className="divide-y divide-gray-100 text-xs md:text-sm">
               {cashflows.length === 0 ? (
                 <tr>
-                  <td colSpan={(session.user.role === "OWNER" || session.user.role === "SUPERADMIN") ? 7 : 6} className="px-3 md:px-4 py-8 text-center text-gray-500">
+                  <td colSpan={(session.user.role === "OWNER" || session.user.role === "SUPER_ADMIN") ? 7 : 6} className="px-3 md:px-4 py-8 text-center text-gray-500">
                     Belum ada data arus kas.
                   </td>
                 </tr>
@@ -168,7 +187,7 @@ export default async function CashflowPage({
                       Rp {item.amount.toLocaleString("id-ID")}
                     </td>
                     <td className="px-3 md:px-4 py-2 md:py-3 text-gray-500">{item.created_by}</td>
-                    {(session.user.role === "OWNER" || session.user.role === "SUPERADMIN") && (
+                    {(session.user.role === "OWNER" || session.user.role === "SUPER_ADMIN") && (
                       <td className="px-3 md:px-4 py-2 md:py-3 text-center">
                         <DeleteCashflowButton id={item.id} />
                       </td>
@@ -179,6 +198,7 @@ export default async function CashflowPage({
             </tbody>
           </table>
         </div>
+        <Pagination totalPages={totalPages} />
       </div>
     </div>
   );

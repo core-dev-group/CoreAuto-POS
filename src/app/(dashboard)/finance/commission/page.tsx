@@ -5,6 +5,7 @@ import { CustomSelect } from "@/components/ui/CustomSelect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { Pagination } from "@/components/ui/Pagination";
 
 export const metadata = {
   title: "Komisi Mekanik | CoreAuto POS",
@@ -13,40 +14,53 @@ export const metadata = {
 export default async function CommissionPage({
   searchParams,
 }: {
-  searchParams: Promise<{ branch?: string }>;
+  searchParams: Promise<{ branch?: string; page?: string }>;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user || session.user.role === "KASIR") redirect("/");
 
-  const { branch } = await searchParams;
+  const { branch, page } = await searchParams;
   const branches = await prisma.branch.findMany({ orderBy: { name: "asc" } });
   const activeBranchId = branch || (branches.length > 0 ? branches[0].id : undefined);
 
+  const currentPage = Number(page) || 1;
+  const limit = 10;
+  const skip = (currentPage - 1) * limit;
+
+  const whereClause = activeBranchId ? { branch_id: activeBranchId, active: true } : { active: true };
+
   // Ambil data mekanik
-  const mechanics = await prisma.mechanic.findMany({
-    where: activeBranchId ? { branch_id: activeBranchId, active: true } : { active: true },
-    include: {
-      branch: true,
-      transactionItems: {
-        where: {
-          transaction: { 
-            status: "SELESAI",
-            created_at: {
-              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1), // Awal bulan ini
+  const [mechanics, total] = await Promise.all([
+    prisma.mechanic.findMany({
+      where: whereClause,
+      include: {
+        branch: true,
+        transactionItems: {
+          where: {
+            transaction: { 
+              status: "SELESAI",
+              created_at: {
+                gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1), // Awal bulan ini
+              },
             },
           },
         },
-      },
-      commissionPayouts: {
-        where: {
-          period_start: {
-            gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        commissionPayouts: {
+          where: {
+            period_start: {
+              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+            }
           }
         }
-      }
-    },
-    orderBy: { name: "asc" },
-  });
+      },
+      orderBy: { name: "asc" },
+      skip,
+      take: limit,
+    }),
+    prisma.mechanic.count({ where: whereClause })
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
 
   return (
     <div className="space-y-5">
@@ -125,6 +139,7 @@ export default async function CommissionPage({
             })
           )}
         </div>
+        <Pagination totalPages={totalPages} />
       </div>
     </div>
   );
